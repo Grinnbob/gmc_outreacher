@@ -11,11 +11,6 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded())
 
-const swaggerUi = require("swagger-ui-express")
-const swaggerDocument = require("./swagger.json")
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-
 // Add headers
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*")
@@ -52,7 +47,7 @@ async function start() {
         }
 
         // start server
-        app.listen(config.server.port, (error) => {
+        app.listen(config.server.port, config.server.host, (error) => {
             if (error) {
                 log.error("... Unable to listen for connections", error)
                 process.exit(10)
@@ -60,7 +55,7 @@ async function start() {
 
             console.log(
                 `--- Server started at ${
-                    config.server.host + config.server.port
+                    config.server.host + ":" + config.server.port
                 } ---`
             )
 
