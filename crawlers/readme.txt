@@ -8,3 +8,6 @@ node tests/test_create_data
 // далее запустить тест любого воркера на созданном таске
 node tests/test
 в самом тесте указать id таска и выбрать нужный воркер
+
+// start server
+npm run start
