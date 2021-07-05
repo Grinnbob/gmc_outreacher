@@ -3,6 +3,25 @@ const express = require("express")
 const config = require("./config")
 const routes = require("./linkedin/routes/workers")
 
+const swaggerUi = require("swagger-ui-express")
+const swaggerJSDoc = require('swagger-jsdoc');
+
+const swaggerDefinition = {
+  openapi: '3.0.0',
+  info: {
+    title: 'Linkedin API pasrer',
+    version: '1.0.0',
+  },
+};
+
+const options = {
+  swaggerDefinition,
+  // Paths to files containing OpenAPI definitions
+  apis: ['./linkedin/routes/*.js'],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
 var log = require("loglevel").getLogger("o24_logger")
 
 const app = express()
@@ -10,6 +29,9 @@ const app = express()
 //app.use(express.urlencoded({ extended: true })) // use = add new middleware
 app.use(express.json())
 app.use(express.urlencoded())
+
+// swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 // Add headers
 app.use(function (req, res, next) {
@@ -54,14 +76,13 @@ async function start() {
             }
 
             console.log(
-                `--- Server started at ${
+                `... Server started at ${
                     config.server.host + ":" + config.server.port
-                } ---`
+                } ...`
             )
 
             log.error(
-                "... Server started in mode: ...",
-                APP_ENV == null ? "Test" : APP_ENV
+                `... Server started in ${APP_ENV == null ? "Test" : APP_ENV} mode ...`,
             )
         })
     } catch (e) {

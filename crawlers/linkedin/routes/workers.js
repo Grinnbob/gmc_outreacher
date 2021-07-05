@@ -1,11 +1,5 @@
 const router = require("express").Router()
 
-const swaggerUi = require("swagger-ui-express")
-//const swaggerDocument = require("../../swagger.json")
-
-router.use("/api-docs", swaggerUi.serve)
-//router.get("/api-docs", swaggerUi.setup(swaggerDocument))
-
 const modules = require("../modules.js")
 //const models_shared = require("../../models/shared.js")
 const models = require("../../models/models.js")
@@ -94,6 +88,91 @@ function serialize_data(input_data) {
     return task_data
 }
 
+
+/**
+ * @swagger
+ * /search:
+ *   post:
+ *     summary: Scribe from Linkedin search.
+ *     description: Scribe linkedin links, names, job, company of members from Linkedin search page.
+ *     requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          credentials_id:
+ *                              type: integer
+ *                              description: Credentials ID for login in Linkedin.
+ *                              example: 5
+ *                          input_data:
+ *                              type: object
+ *                              properties:
+ *                                  campaign_data:
+ *                                      type: object
+ *                                      properties:
+ *                                          search_url:
+ *                                              type: string
+ *                                              description: search URL.
+ *                                              example: www.linkedin.com/user/search=marketers
+ *                                          interval_pages:
+ *                                              type: integer
+ *                                              description: interval between pages scribe.
+ *                                              example: 10
+ *     responses:
+ *       200:
+ *         description: A list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   description: status code
+ *                   example: 0
+ *                 if_true:
+ *                   type: boolean
+ *                   description: some expression
+ *                   example: 0
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                      link:
+ *                          type: string
+ *                          description: search link
+ *                          example: www.linkedin.com/user/search=marketers
+ *                      arr:
+ *                          type: array
+ *                          items:
+ *                              type: object
+ *                              properties:
+ *                                  linkedin:
+ *                                      type: string
+ *                                      description: member link
+ *                                      example: www.linkedin.com/some_user
+ *                                  full_name:
+ *                                      type: string
+ *                                      description: The user's full name.
+ *                                      example: Leanne Graham
+ *                                  first_name:
+ *                                      type: string
+ *                                      description: The user's first name.
+ *                                      example: Leanne
+ *                                  last_name:
+ *                                      type: string
+ *                                      description: The user's last name.
+ *                                      example: Graham
+ *                                  job_title:
+ *                                      type: string
+ *                                      description: The user's job title.
+ *                                      example: Product Marketing Manager
+ *                                  company_name:
+ *                                      type: string
+ *                                      description: The user's company.
+ *                                      example: Morningstar
+*/
 router.post("/search", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
@@ -166,6 +245,91 @@ router.post("/search", async (req, res) => {
     return res.json(result_data)
 })
 
+
+/**
+ * @swagger
+ * /sn/search:
+ *   post:
+ *     summary: Scribe from Linkedin Sales Navigator search.
+ *     description: Scribe linkedin links, names, job, company of members from Linkedin search page.
+ *     requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          credentials_id:
+ *                              type: integer
+ *                              description: Credentials ID for login in Linkedin.
+ *                              example: 5
+ *                          input_data:
+ *                              type: object
+ *                              properties:
+ *                                  campaign_data:
+ *                                      type: object
+ *                                      properties:
+ *                                          search_url:
+ *                                              type: string
+ *                                              description: search URL.
+ *                                              example: www.linkedin.com/user/search=marketers
+ *                                          interval_pages:
+ *                                              type: integer
+ *                                              description: interval between pages scribe.
+ *                                              example: 10
+ *     responses:
+ *       200:
+ *         description: A list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   description: status code
+ *                   example: 0
+ *                 if_true:
+ *                   type: boolean
+ *                   description: some expression
+ *                   example: 0
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                      link:
+ *                          type: string
+ *                          description: search link
+ *                          example: www.linkedin.com/user/search=marketers
+ *                      arr:
+ *                          type: array
+ *                          items:
+ *                              type: object
+ *                              properties:
+ *                                  linkedin:
+ *                                      type: string
+ *                                      description: member link
+ *                                      example: www.linkedin.com/some_user
+ *                                  full_name:
+ *                                      type: string
+ *                                      description: The user's full name.
+ *                                      example: Leanne Graham
+ *                                  first_name:
+ *                                      type: string
+ *                                      description: The user's first name.
+ *                                      example: Leanne
+ *                                  last_name:
+ *                                      type: string
+ *                                      description: The user's last name.
+ *                                      example: Graham
+ *                                  job_title:
+ *                                      type: string
+ *                                      description: The user's job title.
+ *                                      example: Product Marketing Manager
+ *                                  company_name:
+ *                                      type: string
+ *                                      description: The user's company.
+ *                                      example: Morningstar
+*/
 router.post("/sn/search", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}

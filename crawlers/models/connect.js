@@ -9,9 +9,9 @@ var APP_ENV = process.env.APP_ENV;
 var mongoDB = '';
 
 if (APP_ENV == 'Production') {
-    mongoDB = 'mongodb://127.0.0.1:27017/O24Mc-prod'; 
+    mongoDB = 'mongodb://127.0.0.1:27017/linkedinAPI-prod'; 
 } else {
-    mongoDB = 'mongodb://127.0.0.1:27017/O24Mc-test'; 
+    mongoDB = 'mongodb://127.0.0.1:27017/linkedinAPI-test'; 
 }
 
 mongoose.connect(mongoDB, function (err) {
