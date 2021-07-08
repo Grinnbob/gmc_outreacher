@@ -8,13 +8,17 @@
     },
     "scripts": {
         "start": "pm2 start server.js",
+        "stop": "pm2 stop server.js",
+        "restart": "pm2 restart server.js",
         "status": "pm2 status",
         "logs": "pm2 logs"
     },
     "dependencies": {
         "babel-polyfill": "^6.26.0",
         "bull": "^3.13.0",
+        "connect-flash": "^0.1.1",
         "express": "^4.17.1",
+        "express-session": "^1.17.2",
         "jQuery": "^1.7.4",
         "jsdom": "^16.2.2",
         "loglevel": "^1.6.8",
@@ -22,6 +26,8 @@
         "nickjs": "^0.3.7",
         "node-cron": "^2.0.3",
         "node-fetch": "^2.6.0",
+        "passport": "^0.4.1",
+        "passport-local": "^1.0.0",
         "pino": "^6.0.0",
         "pm2": "^5.1.0",
         "puppeteer": "^2.1.1",

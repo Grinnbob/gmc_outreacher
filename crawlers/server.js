@@ -2,6 +2,7 @@ const express = require("express")
 //const mongoose = require("mongoose")
 const config = require("./config")
 const routes = require("./linkedin/routes/workers")
+const models = require("./models/models.js")
 
 const swaggerUi = require("swagger-ui-express")
 const swaggerJSDoc = require('swagger-jsdoc');
@@ -26,12 +27,44 @@ var log = require("loglevel").getLogger("o24_logger")
 
 const app = express()
 
-//app.use(express.urlencoded({ extended: true })) // use = add new middleware
-app.use(express.json())
-app.use(express.urlencoded())
+// auth
+const session = require('express-session')
+const passport = require('passport')
+const localStrategy = require('passport-local').Strategy
+const flash = require('connect-flash')
 
-// swagger
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+passport.serializeUser((user, done) => done(null, user))
+passport.deserializeUser((user, done) => done(null, user))
+
+
+app.use(express.json())
+//app.use(express.urlencoded())
+app.use(express.urlencoded({ extended: true }))
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)) // swagger
+
+/// auth
+app.use(session({ secret: 'Linkedin_API_secret_8' }))
+app.use(flash())
+app.use(passport.initialize())
+app.use(passport.session())
+
+passport.use(
+    new localStrategy(async (login, password, done) => {
+        let user = await models.Users.findOne({ login: login });
+
+        if (user == null)
+            return done(null, false, {
+                message: 'User not found',
+            })
+        else if (password !== user.password)
+            return done(null, false, {
+                message: 'Wrong password',
+            })
+    
+        return done(null, user)
+    })
+  )
 
 // Add headers
 app.use(function (req, res, next) {

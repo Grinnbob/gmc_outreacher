@@ -9,6 +9,10 @@ let accountsSchema = new Schema({
         default: null,
     },
 
+    user_id: {
+        type: mongoose.ObjectId,
+    },
+
     status: {
         type: Number,
         default: 0,
@@ -40,7 +44,65 @@ let accountsSchema = new Schema({
         type: Object,
         default: null,
     },
+});
 
+
+let userSchema = new Schema({
+    login: {
+        type: String,
+    },
+
+    password: {
+        type: String,
+    },
+
+    token: {
+        type: String,
+        default: null,
+    },
+
+    status: {
+        type: Number,
+        default: 0 // 0 = test user, 1 = active, 2 = archived
+    },
+
+});
+
+
+let actionSchema = new Schema({
+    action: {
+        type: Number, // action type
+    },
+
+    user_id: {
+        type: Number,
+    },
+
+    timestamp: {
+        type: String,
+        default: null,
+    },
+
+    status: {
+        type: Number,
+        default: 0 // exit status: 0 = in progress, 1 = done, -1 = exit with error
+    },
+
+    input_data : Object,
+
+    result_data : Object,
+
+    ack : {
+        type: Number, // 1 = in work, 0 = free
+        default: 0,
+    },
+    
+    is_queued : {
+        type: Number,
+        default: 0,
+    },
+    
+    blocking_data : Object,
 });
 
 
@@ -54,10 +116,12 @@ let cronLockSchema = new Schema({
         type: Number,
         default: 0,
     },
-
 });
+
 
 module.exports = {
     Accounts: mongoose.model('Accounts', accountsSchema),
     CronLock: mongoose.model('CronLock', cronLockSchema),
+    Users: mongoose.model('Users', userSchema),
+    Actions: mongoose.model('Actions', actionSchema),
 }

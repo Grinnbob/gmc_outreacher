@@ -174,7 +174,7 @@ function get_hostname_url(url) {
 }
 
 
-// do 1 trie to goto URL or goto login
+// do 1 try to goto URL or goto login
 async function gotoChecker(context, page, credentials_id, url) {
     //log.debug('gotoChecker - url: ', url)
     if (!context) {
