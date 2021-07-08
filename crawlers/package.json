@@ -21,6 +21,7 @@
         "express-session": "^1.17.2",
         "jQuery": "^1.7.4",
         "jsdom": "^16.2.2",
+        "jsonwebtoken": "^8.5.1",
         "loglevel": "^1.6.8",
         "mongoose": "^5.12.15",
         "nickjs": "^0.3.7",

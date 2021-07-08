@@ -1,7 +1,6 @@
-let mongooseConnect = require('./connect.js');
-let mongoose = mongooseConnect.mongoose;
-let Schema = mongoose.Schema;
-
+let mongooseConnect = require("./connect.js")
+let mongoose = mongooseConnect.mongoose
+let Schema = mongoose.Schema
 
 let accountsSchema = new Schema({
     task_id: {
@@ -44,8 +43,7 @@ let accountsSchema = new Schema({
         type: Object,
         default: null,
     },
-});
-
+})
 
 let userSchema = new Schema({
     login: {
@@ -63,11 +61,9 @@ let userSchema = new Schema({
 
     status: {
         type: Number,
-        default: 0 // 0 = test user, 1 = active, 2 = archived
+        default: 0, // 0 = test user, 1 = active, 2 = archived
     },
-
-});
-
+})
 
 let actionSchema = new Schema({
     action: {
@@ -75,7 +71,7 @@ let actionSchema = new Schema({
     },
 
     user_id: {
-        type: Number,
+        type: mongoose.ObjectId,
     },
 
     timestamp: {
@@ -85,26 +81,25 @@ let actionSchema = new Schema({
 
     status: {
         type: Number,
-        default: 0 // exit status: 0 = in progress, 1 = done, -1 = exit with error
+        default: 0, // exit status: 0 = in progress, 1 = done, -1 = exit with error
     },
 
-    input_data : Object,
+    input_data: Object,
 
-    result_data : Object,
+    result_data: Object,
 
-    ack : {
+    ack: {
         type: Number, // 1 = in work, 0 = free
         default: 0,
     },
-    
-    is_queued : {
+
+    is_queued: {
         type: Number,
         default: 0,
     },
-    
-    blocking_data : Object,
-});
 
+    blocking_data: Object,
+})
 
 let cronLockSchema = new Schema({
     lock: {
@@ -116,12 +111,11 @@ let cronLockSchema = new Schema({
         type: Number,
         default: 0,
     },
-});
-
+})
 
 module.exports = {
-    Accounts: mongoose.model('Accounts', accountsSchema),
-    CronLock: mongoose.model('CronLock', cronLockSchema),
-    Users: mongoose.model('Users', userSchema),
-    Actions: mongoose.model('Actions', actionSchema),
+    Accounts: mongoose.model("Accounts", accountsSchema),
+    CronLock: mongoose.model("CronLock", cronLockSchema),
+    Users: mongoose.model("Users", userSchema),
+    Actions: mongoose.model("Actions", actionSchema),
 }

@@ -1,4 +1,5 @@
 const router = require("express").Router()
+const jwt = require("jsonwebtoken")
 
 const modules = require("../modules.js")
 //const models_shared = require("../../models/shared.js")
@@ -10,30 +11,18 @@ var log = require("loglevel").getLogger("o24_logger")
 const status_codes = require("../status_codes")
 const action_codes = require("../action_codes").action_codes
 
+// todo https://habr.com/ru/company/ruvds/blog/457700/
+function generateToken(user) {
+    const data = {
+        _id: user._id,
+        name: user.name,
+        login: user.login,
+    }
+    const signature = "abcdSUPERLINKEDINAPPqwerty000"
+    const expiration = "7d"
 
-async function checkAuth() {
-    return router.use(async (req, res, next) => {
-        console.log(req);
-      if (req.login && req.password) {
-        // let user = await models.Users.findOne({ login: login });
-
-        // if (user == null)
-        //     return done(null, false, {
-        //         message: 'User not found',
-        //     })
-        // else if (password !== user.password)
-        //     return done(null, false, {
-        //         message: 'Wrong password',
-        //     })
-    
-        next()
-      }
-      else {
-          log.error("Auth error - empty login / password in request")
-      }
-    })
-  }
-
+    return jwt.sign({ data }, signature, { expiresIn: expiration })
+}
 
 async function get_cookies(credentials_id) {
     let account = await models.Accounts.findOne(
@@ -114,7 +103,6 @@ function serialize_data(input_data) {
     return task_data
 }
 
-
 /**
  * @swagger
  * /user:
@@ -152,36 +140,30 @@ function serialize_data(input_data) {
  *                   type: boolean
  *                   description: some expression
  *                   example: false
-*/
-router.post("/user", checkAuth, async (req, res) => {
+ */
+router.post("/user", async (req, res) => {
     let result_data = {}
     let task = req.body
+    console.log("...task: ...", task)
 
     try {
-        // find user
-        let user = await models.Users.findOne({ login: task.login }, function (err_db, res) {
-            if (err_db) throw MyExceptions.MongoDBError('MongoDB find user err: ' + err_db)
-        })
-
-        if( user ) { 
-            result_data = {
-                if_true: false,
-                code: -1,
-                raw: 'User already exists',
+        // create user
+        let user = await models.Users.create(
+            { login: task.login, password: task.password },
+            function (err_db, res) {
+                if (err_db)
+                    throw MyExceptions.MongoDBError(
+                        "MongoDB create user err: " + err_db
+                    )
             }
-        } else {
+        )
 
-            // create account
-            user = await models.Users.create({ login: task.login, password: task.password }, function (err_db, res) {
-                if (err_db) throw MyExceptions.MongoDBError('MongoDB create user err: ' + err_db)
-            })
+        console.log("... user created: ...", user)
 
-            result_data = {
-                if_true: false,
-                code: 0,
-            }
+        result_data = {
+            if_true: false,
+            code: 0,
         }
-
     } catch (err) {
         log.error("create user error:", err.stack)
 
@@ -192,13 +174,11 @@ router.post("/user", checkAuth, async (req, res) => {
             code: -1,
             raw: err,
         }
-
     }
 
     log.debug("Create user RES: ", result_data)
     return res.json(result_data)
 })
-
 
 /**
  * @swagger
@@ -255,45 +235,47 @@ router.post("/user", checkAuth, async (req, res) => {
  *                          type: integer
  *                          description: credentials_id for next requests
  *                          example: 1589
-*/
-router.post("/account", checkAuth, async (req, res) => {
+ */
+router.post("/account", async (req, res) => {
     let result_data = {}
     let task = req.body
+    console.log("...task...", task)
 
     try {
         let input_data = task.input_data
         if (!input_data) {
             throw new Error("there is no task.input_data")
         }
-        let task_data = serialize_data(input_data)
+        console.log("input_data: ", input_data)
 
-        // find user
-        let user = await models.Users.findOne({ login: task.login }, function (err_db, res) {
-            if (err_db) throw MyExceptions.MongoDBError('MongoDB find user err: ' + err_db)
-        })
-
-        if( !user ) { 
-            result_data = {
-                if_true: false,
-                code: -1,
-                raw: 'User not found',
+        // create account
+        await models.Accounts.create(
+            {
+                login: input_data.login,
+                password: input_data.password,
+                user_id: task.user._id,
+            },
+            function (err_db, res) {
+                if (err_db)
+                    throw MyExceptions.MongoDBError(
+                        "MongoDB create account err: " + err_db
+                    )
             }
-        } else if ( user.password !== task.password ) {
-            result_data = {
-                if_true: false,
-                code: -1,
-                raw: 'Wrong password',
+        )
+
+        let account = await models.Accounts.findOne(
+            { login: input_data.login },
+            function (err_db, res) {
+                if (err_db)
+                    throw MyExceptions.MongoDBError(
+                        "MongoDB find account err: " + err_db
+                    )
             }
-        } else {
+        )
 
-            // create account
-            let account = await models.Accounts.create({ login: task_data.login, password: task_data.password, user_id: user._id }, function (err_db, res) {
-                if (err_db) throw MyExceptions.MongoDBError('MongoDB create account err: ' + err_db)
-            })
+        console.log("...created account: ... ", account)
 
-            result_data._id = account._id
-        }
-
+        result_data._id = account._id
     } catch (err) {
         log.error("create account error:", err.stack)
 
@@ -304,13 +286,11 @@ router.post("/account", checkAuth, async (req, res) => {
             code: -1,
             raw: err,
         }
-
     }
 
     log.debug("Create account RES: ", result_data)
     return res.json(result_data)
 })
-
 
 /**
  * @swagger
@@ -325,6 +305,14 @@ router.post("/account", checkAuth, async (req, res) => {
  *                  schema:
  *                      type: object
  *                      properties:
+ *                          login:
+ *                              type: string
+ *                              description: service login
+ *                              example: servicelogin@gsuit.com
+ *                          password:
+ *                              type: string
+ *                              description: service password
+ *                              example: mypass1234
  *                          credentials_id:
  *                              type: integer
  *                              description: Credentials ID for login in Linkedin.
@@ -395,13 +383,14 @@ router.post("/account", checkAuth, async (req, res) => {
  *                                      type: string
  *                                      description: The user's company.
  *                                      example: Morningstar
-*/
-router.post("/search", checkAuth, async (req, res) => {
+ */
+router.post("/search", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
     let credentials_id = null
     let action = null
+    console.log("...task...", task)
 
     let browser = null
     try {
@@ -415,46 +404,37 @@ router.post("/search", checkAuth, async (req, res) => {
         }
         let task_data = serialize_data(input_data)
 
-        // find user
-        let user = await models.Users.findOne({ login: task.login }, function (err_db, res) {
-            if (err_db) throw MyExceptions.MongoDBError('MongoDB find user err: ' + err_db)
-        })
-
-        if( !user ) { 
-            result_data = {
-                if_true: false,
-                code: -1,
-                raw: 'User not found',
-            }
-        } else if ( user.password !== task.password ) {
-            result_data = {
-                if_true: false,
-                code: -1,
-                raw: 'Wrong password',
-            }
-        } else {
-
-            try {
-                action = await models.Actions.create({ action: action_codes.linkedin_search, user_id: user._id, timestamp: new Date(), status: 0, ack: 1, input_data: input_data, result_data: result_data })
-            } catch (err) {
-                throw new Error(`Can't save action for ${action_codes.linkedin_search} for user ${user._id}`)
-            }
-
-            let cookies = await get_cookies(credentials_id)
-
-            // start work
-            searchAction = new modules.searchAction.SearchAction(
-                cookies,
-                credentials_id,
-                task_data.campaign_data.search_url,
-                task_data.campaign_data.interval_pages
+        try {
+            // create action
+            action = await models.Actions.create({
+                action: action_codes.linkedin_search,
+                user_id: task.user._id,
+                timestamp: new Date(),
+                status: 0,
+                ack: 1,
+                input_data: input_data,
+                result_data: result_data,
+            })
+        } catch (err) {
+            throw new Error(
+                `Can't save action for ${action_codes.linkedin_search} for user ${task.user._id}: ${err}`
             )
-            browser = await searchAction.startBrowser()
-            result_data = await searchAction.search()
-            browser = await searchAction.closeBrowser()
-
-            status = result_data.code >= 0 ? 5 : -1 // if we got some exception (BAN?), we have to save results before catch Error and send task status -1
         }
+
+        let cookies = await get_cookies(credentials_id)
+
+        // start work
+        searchAction = new modules.searchAction.SearchAction(
+            cookies,
+            credentials_id,
+            task_data.campaign_data.search_url,
+            task_data.campaign_data.interval_pages
+        )
+        browser = await searchAction.startBrowser()
+        result_data = await searchAction.search()
+        browser = await searchAction.closeBrowser()
+
+        status = result_data.code >= 0 ? 5 : -1 // if we got some exception (BAN?), we have to save results before catch Error and send task status -1
     } catch (err) {
         log.error("searchWorker error:", err.stack)
 
@@ -493,14 +473,22 @@ router.post("/search", checkAuth, async (req, res) => {
     }
 
     try {
-        await models.Actions.findOneAndUpdate({ _id: action._id }, { timestamp: new Date(), status: 1, ack: 0, result_data: result_data });
+        // update action
+        await models.Actions.findOneAndUpdate(
+            { _id: action._id },
+            {
+                timestamp: new Date(),
+                status: 1,
+                ack: 0,
+                result_data: result_data,
+            }
+        )
     } catch (err) {
         log.error(`Can't update action for ${req.login}`)
     }
 
     return res.json(result_data)
 })
-
 
 /**
  * @swagger
@@ -515,6 +503,14 @@ router.post("/search", checkAuth, async (req, res) => {
  *                  schema:
  *                      type: object
  *                      properties:
+ *                          login:
+ *                              type: string
+ *                              description: service login
+ *                              example: servicelogin@gsuit.com
+ *                          password:
+ *                              type: string
+ *                              description: service password
+ *                              example: mypass1234
  *                          credentials_id:
  *                              type: integer
  *                              description: Credentials ID for login in Linkedin.
@@ -585,8 +581,8 @@ router.post("/search", checkAuth, async (req, res) => {
  *                                      type: string
  *                                      description: The user's company.
  *                                      example: Morningstar
-*/
-router.post("/sn/search", checkAuth, async (req, res) => {
+ */
+router.post("/sn/search", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -603,6 +599,23 @@ router.post("/sn/search", checkAuth, async (req, res) => {
             throw new Error("there is no task.input_data")
         }
         let task_data = serialize_data(input_data)
+
+        try {
+            // create action
+            action = await models.Actions.create({
+                action: action_codes.linkedin_search_sn,
+                user_id: task.user._id,
+                timestamp: new Date(),
+                status: 0,
+                ack: 1,
+                input_data: input_data,
+                result_data: result_data,
+            })
+        } catch (err) {
+            throw new Error(
+                `Can't save action for ${action_codes.linkedin_search_sn} for user ${task.user._id}: ${err}`
+            )
+        }
 
         let cookies = await get_cookies(credentials_id)
 
@@ -655,10 +668,25 @@ router.post("/sn/search", checkAuth, async (req, res) => {
         }
     }
 
+    try {
+        // update action
+        await models.Actions.findOneAndUpdate(
+            { _id: action._id },
+            {
+                timestamp: new Date(),
+                status: 1,
+                ack: 0,
+                result_data: result_data,
+            }
+        )
+    } catch (err) {
+        log.error(`Can't update action for ${req.login}`)
+    }
+
     return res.json(result_data)
 })
 
-router.post("/connect", checkAuth, async (req, res) => {
+router.post("/connect", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -740,7 +768,7 @@ router.post("/connect", checkAuth, async (req, res) => {
     return res.json(result_data)
 })
 
-router.post("/message", checkAuth, async (req, res) => {
+router.post("/message", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -833,7 +861,7 @@ router.post("/message", checkAuth, async (req, res) => {
     return res.json(result_data)
 })
 
-router.post("/scribe", checkAuth, async (req, res) => {
+router.post("/scribe", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -908,7 +936,7 @@ router.post("/scribe", checkAuth, async (req, res) => {
     return res.json(result_data)
 })
 
-router.post("/sn/scribe", checkAuth, async (req, res) => {
+router.post("/sn/scribe", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -983,7 +1011,7 @@ router.post("/sn/scribe", checkAuth, async (req, res) => {
     return res.json(result_data)
 })
 
-router.post("/message/check", checkAuth, async (req, res) => {
+router.post("/message/check", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -1054,7 +1082,7 @@ router.post("/message/check", checkAuth, async (req, res) => {
     return res.json(result_data)
 })
 
-router.post("/connect/check", checkAuth, async (req, res) => {
+router.post("/connect/check", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -1129,7 +1157,7 @@ router.post("/connect/check", checkAuth, async (req, res) => {
     return res.json(result_data)
 })
 
-router.post("/profile/visit", checkAuth, async (req, res) => {
+router.post("/profile/visit", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -1204,7 +1232,7 @@ router.post("/profile/visit", checkAuth, async (req, res) => {
     return res.json(result_data)
 })
 
-router.post("/post/engagement", checkAuth, async (req, res) => {
+router.post("/post/engagement", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
