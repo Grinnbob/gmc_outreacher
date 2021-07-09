@@ -86,7 +86,7 @@ router.post("/account", async (req, res) => {
                       {
                           name: "li_at",
                           value: input_data.li_at,
-                          domain: ".linkedin",
+                          domain: ".www.linkedin.com",
                           path: "/",
                           expires: Date.now() / 1000 + 10000000, // + ~ 4 months // https://www.epochconverter.com/
                           size: new TextEncoder().encode(input_data.li_at)

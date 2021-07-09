@@ -55,13 +55,9 @@ app.use(async (req, res, next) => {
         req.body.user = await models.Users.findOne({ login: req.body.login })
 
         if (req.body.user == null)
-            return done(null, false, {
-                message: "User not found",
-            })
+            return next("User not found")
         else if (req.body.password !== req.body.user.password)
-            return done(null, false, {
-                message: "Wrong password",
-            })
+            return next("Wrong password")
 
         log.debug("User checked")
 
