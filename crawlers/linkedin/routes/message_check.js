@@ -14,8 +14,8 @@ const action_codes = require("../action_codes").action_codes
  * @swagger
  * /message/check:
  *   post:
- *     summary: Check if message has been sent to Linkedin member.
- *     description: Check if message has been sent to Linkedin member.
+ *     summary: Check if Linkedin member sent reply.
+ *     description: Check if Linkedin member sent reply.
  *     requestBody:
  *          required: true
  *          content:
@@ -47,7 +47,7 @@ const action_codes = require("../action_codes").action_codes
  *                                              example: www.linkedin.com/user/
  *     responses:
  *       200:
- *         description: Messaged or not
+ *         description: Reply exists or not
  *         content:
  *           application/json:
  *             schema:
@@ -59,7 +59,7 @@ const action_codes = require("../action_codes").action_codes
  *                   example: 0
  *                 if_true:
  *                   type: boolean
- *                   description: true if message has been sent
+ *                   description: true if reply has been sent
  *                   example: false
  */
 router.post("/message/check", async (req, res) => {
@@ -67,6 +67,7 @@ router.post("/message/check", async (req, res) => {
     let result_data = {}
     let task = req.body
     let credentials_id = null
+    let action = null
 
     let browser = null
     try {
@@ -79,6 +80,23 @@ router.post("/message/check", async (req, res) => {
             throw new Error("there is no task.input_data")
         }
         let task_data = utils.serialize_data(input_data)
+
+        try {
+            // create action
+            action = await models.Actions.create({
+                action: action_codes.linkedin_check_reply,
+                user_id: task.user._id,
+                timestamp: new Date(),
+                status: 0,
+                ack: 1,
+                input_data: input_data,
+                result_data: result_data,
+            })
+        } catch (err) {
+            throw new Error(
+                `Can't save action for ${action_codes.linkedin_check_reply} for user ${task.user._id}: ${err}`
+            )
+        }
 
         let cookies = await utils.get_cookies(credentials_id)
 
@@ -128,6 +146,21 @@ router.post("/message/check", async (req, res) => {
             await browser.close()
             browser.disconnect()
         }
+    }
+
+    try {
+        // update action
+        await models.Actions.findOneAndUpdate(
+            { _id: action._id },
+            {
+                timestamp: new Date(),
+                status: 1,
+                ack: 0,
+                result_data: result_data,
+            }
+        )
+    } catch (err) {
+        log.error(`Can't update action for ${task.user.login}`)
     }
 
     return res.json(result_data)

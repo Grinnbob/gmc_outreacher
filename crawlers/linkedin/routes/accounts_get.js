@@ -56,15 +56,7 @@ router.post("/accounts", async (req, res) => {
     let task = req.body
 
     try {
-        let accounts = await models.Accounts.findAll(
-            { user_id: task.user._id },
-            function (err_db, res) {
-                if (err_db)
-                    throw MyExceptions.MongoDBError(
-                        "MongoDB find accounts err: " + err_db
-                    )
-            }
-        )
+        let accounts = await models.Accounts.find({ user_id: task.user._id })
 
         console.log("... accounts: ... ", accounts)
 

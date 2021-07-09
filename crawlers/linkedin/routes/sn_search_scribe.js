@@ -12,10 +12,10 @@ const action_codes = require("../action_codes").action_codes
 
 /**
  * @swagger
- * /search:
+ * /sn/search/scribe:
  *   post:
- *     summary: Scribe from Linkedin search.
- *     description: Scribe linkedin links, names, job, company of members from Linkedin search page.
+ *     summary: Scribe from Linkedin Sales Navigator search EACH profile.
+ *     description: Scribe linkedin links, names, job, company and all other info of members from Linkedin Sales Navigator search page.
  *     requestBody:
  *          required: true
  *          content:
@@ -102,7 +102,7 @@ const action_codes = require("../action_codes").action_codes
  *                                      description: The user's company.
  *                                      example: Morningstar
  */
-router.post("/search", async (req, res) => {
+router.post("/sn/search/scribe", async (req, res) => {
     let status = status_codes.FAILED
     let result_data = {}
     let task = req.body
@@ -124,7 +124,7 @@ router.post("/search", async (req, res) => {
         try {
             // create action
             action = await models.Actions.create({
-                action: action_codes.linkedin_search,
+                action: action_codes.linkedin_search_scribe_sn,
                 user_id: task.user._id,
                 timestamp: new Date(),
                 status: 0,
@@ -134,26 +134,52 @@ router.post("/search", async (req, res) => {
             })
         } catch (err) {
             throw new Error(
-                `Can't save action for ${action_codes.linkedin_search} for user ${task.user._id}: ${err}`
+                `Can't save action for ${action_codes.linkedin_search_scribe_sn} for user ${task.user._id}: ${err}`
             )
         }
 
         let cookies = await utils.get_cookies(credentials_id)
 
         // start work
-        searchAction = new modules.searchAction.SearchAction(
+        sn_searchAction = new modules.sn_searchAction.SN_SearchAction(
             cookies,
             credentials_id,
             task_data.campaign_data.search_url,
             task_data.campaign_data.interval_pages
         )
-        browser = await searchAction.startBrowser()
-        result_data = await searchAction.search()
-        browser = await searchAction.closeBrowser()
+        browser = await sn_searchAction.startBrowser()
+        result_data = await sn_searchAction.search()
+        browser = await sn_searchAction.closeBrowser()
 
         status = result_data.code >= 0 ? 5 : -1 // if we got some exception (BAN?), we have to save results before catch Error and send task status -1
+
+        log.debug(
+            `... search completed: ${result_data.data.arr.length} found ...`
+        )
+        try {
+            if (result_data.data.arr.length > 0) {
+                for (let i = 0; i < result_data.data.arr.length; i++) {
+                    // start work
+                    let sn_scribeAction =
+                        new modules.sn_scribeAction.SN_ScribeAction(
+                            cookies,
+                            credentials_id,
+                            result_data.data.arr[i].linkedin
+                        )
+                    browser = await sn_scribeAction.startBrowser()
+                    result_data.data.arr[i] = await sn_scribeAction.scribe()
+                    browser = await sn_scribeAction.closeBrowser()
+                }
+
+                log.debug(
+                    `... scribe completed: ${result_data.data.arr.length} found ...`
+                )
+            }
+        } catch (err) {
+            log.error("sn_searcScribehWorker error:", err.stack)
+        }
     } catch (err) {
-        log.error("searchWorker error:", err.stack)
+        log.error("sn_searcScribehWorker error:", err.stack)
 
         status = status_codes.FAILED
 
@@ -174,14 +200,14 @@ router.post("/search", async (req, res) => {
         } else {
             result_data = {
                 if_true: false,
-                code: MyExceptions.SearchWorkerError().code,
-                raw: MyExceptions.SearchWorkerError(
-                    "searchWorker error: " + err
+                code: MyExceptions.SN_SearchWorkerError().code,
+                raw: MyExceptions.SN_SearchWorkerError(
+                    "sn_searcScribehWorker error: " + err
                 ).error,
             }
         }
     } finally {
-        log.debug("SearchWorker RES: ", result_data)
+        log.debug("sn_searcScribehWorker RES: ", result_data)
 
         if (browser != null) {
             await browser.close()

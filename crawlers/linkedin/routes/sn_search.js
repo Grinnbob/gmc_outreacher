@@ -123,7 +123,7 @@ router.post("/sn/search", async (req, res) => {
 
         try {
             // create action
-            await models.Actions.create({
+            action = await models.Actions.create({
                 action: action_codes.linkedin_search_sn,
                 user_id: task.user._id,
                 timestamp: new Date(),
@@ -201,7 +201,7 @@ router.post("/sn/search", async (req, res) => {
             }
         )
     } catch (err) {
-        log.error(`Can't update action for ${req.login}`)
+        log.error(`Can't update action for ${task.user.login}`)
     }
 
     return res.json(result_data)

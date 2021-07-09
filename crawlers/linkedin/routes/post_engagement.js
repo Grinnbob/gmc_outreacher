@@ -71,6 +71,7 @@ router.post("/post/engagement", async (req, res) => {
     let result_data = {}
     let task = req.body
     let credentials_id = null
+    let action = null
 
     let browser = null
     try {
@@ -83,6 +84,23 @@ router.post("/post/engagement", async (req, res) => {
             throw new Error("there is no task.input_data")
         }
         let task_data = utils.serialize_data(input_data)
+
+        try {
+            // create action
+            action = await models.Actions.create({
+                action: action_codes.linkedin_post_parsing,
+                user_id: task.user._id,
+                timestamp: new Date(),
+                status: 0,
+                ack: 1,
+                input_data: input_data,
+                result_data: result_data,
+            })
+        } catch (err) {
+            throw new Error(
+                `Can't save action for ${action_codes.linkedin_post_parsing} for user ${task.user._id}: ${err}`
+            )
+        }
 
         let cookies = await utils.get_cookies(credentials_id)
 
@@ -133,6 +151,21 @@ router.post("/post/engagement", async (req, res) => {
             await browser.close()
             browser.disconnect()
         }
+    }
+
+    try {
+        // update action
+        await models.Actions.findOneAndUpdate(
+            { _id: action._id },
+            {
+                timestamp: new Date(),
+                status: 1,
+                ack: 0,
+                result_data: result_data,
+            }
+        )
+    } catch (err) {
+        log.error(`Can't update action for ${task.user.login}`)
     }
 
     return res.json(result_data)

@@ -52,21 +52,19 @@ router.post("/user", async (req, res) => {
 
     try {
         // create user
-        let user = await models.Users.create(
-            { login: task.login, password: task.password },
-            function (err_db, res) {
-                if (err_db)
-                    throw MyExceptions.MongoDBError(
-                        "MongoDB create user err: " + err_db
-                    )
-            }
-        )
+        let user = await models.Users.create({
+            login: task.login,
+            password: task.password,
+        })
 
         console.log("... user created: ...", user)
 
         result_data = {
-            if_true: false,
+            if_true: true,
             code: 0,
+            data: {
+                login: user.login,
+            },
         }
     } catch (err) {
         log.error("create user error:", err.stack)
