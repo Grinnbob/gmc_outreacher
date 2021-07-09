@@ -208,7 +208,7 @@ class SN_ScribeAction extends action.Action {
       log.debug("SN_ScribeAction: emails added")
     }
 
-    // twitter
+    // social
     selector_res = await utils.check_success_selector(selectors.SN_CONTACT_INFO_SOCIAL_SELECTOR, this.page)
     if(selector_res) {
       mySelector = selectors.SN_CONTACT_INFO_SOCIAL_SELECTOR

@@ -153,6 +153,7 @@ router.post("/sn/search/scribe", async (req, res) => {
 
         status = result_data.code >= 0 ? 5 : -1 // if we got some exception (BAN?), we have to save results before catch Error and send task status -1
 
+        result_data.data = JSON.parse(result_data.data)
         log.debug(
             `... search completed: ${result_data.data.arr.length} found ...`
         )
