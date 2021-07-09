@@ -1,11 +1,14 @@
 const express = require("express")
+const fs = require("fs")
 //const mongoose = require("mongoose")
 const config = require("./config")
-const routes = require("./linkedin/routes/workers")
+//const routes = require("./linkedin/routes/*.js")
 const models = require("./models/models.js")
 
 const swaggerUi = require("swagger-ui-express")
 const swaggerJSDoc = require("swagger-jsdoc")
+
+const routes_path = "./linkedin/routes/"
 
 const swaggerDefinition = {
     openapi: "3.0.0",
@@ -99,7 +102,11 @@ app.use(function (req, res, next) {
 })
 
 //app.use('/bs/api', require('./api/router'))
-app.use(routes)
+//app.use(routes)
+fs.readdirSync(routes_path).forEach(function (file) {
+    console.log(routes_path + file)
+    app.use(require(routes_path + file))
+})
 
 async function start() {
     try {
