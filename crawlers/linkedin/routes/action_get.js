@@ -52,7 +52,7 @@ router.post("/action", async (req, res) => {
     let task = req.body
 
     try {
-        let action = await models.Actions.findOne({ user_id: task.user._id }).sort('-timestamp').exec((err, docs) => { return docs[0] });
+        let action = (await models.Actions.find({ user_id: task.user._id }).sort('-timestamp'))[0]
 
         console.log("... action: ... ", action)
 

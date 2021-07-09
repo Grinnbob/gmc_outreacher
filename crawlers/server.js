@@ -100,7 +100,6 @@ app.use(function (req, res, next) {
 //app.use('/bs/api', require('./api/router'))
 //app.use(routes)
 fs.readdirSync(routes_path).forEach(function (file) {
-    console.log(routes_path + file)
     app.use(require(routes_path + file))
 })
 

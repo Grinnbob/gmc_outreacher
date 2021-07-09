@@ -47,12 +47,12 @@ const status_codes = require("../status_codes")
  *                   description: actions
  *                   example: []
  */
-router.post("/action", async (req, res) => {
+router.post("/actions", async (req, res) => {
     let result_data = {}
     let task = req.body
 
     try {
-        let actions = await models.Actions.find({ user_id: task.user._id })
+        let actions = await models.Actions.find({ user_id: task.user._id }).sort('-timestamp')
 
         console.log("... actions found: ... ", actions.length)
 
