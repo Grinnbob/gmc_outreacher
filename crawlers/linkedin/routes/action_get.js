@@ -59,7 +59,7 @@ router.post("/action", async (req, res) => {
         result_data = {
             code: 0,
             if_true: true,
-            data: action.result_data,
+            data: action,
         }
     } catch (err) {
         log.error("Get action error:", err.stack)
