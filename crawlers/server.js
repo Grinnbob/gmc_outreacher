@@ -54,8 +54,7 @@ app.use(async (req, res, next) => {
     if (req.body.login && req.body.password) {
         req.body.user = await models.Users.findOne({ login: req.body.login })
 
-        if (req.body.user == null)
-            return next("User not found")
+        if (req.body.user == null) return next("User not found")
         else if (req.body.password !== req.body.user.password)
             return next("Wrong password")
 
@@ -64,6 +63,7 @@ app.use(async (req, res, next) => {
         next()
     } else {
         log.error("Auth error - empty login / password in request")
+        console.log(req.body)
     }
 })
 

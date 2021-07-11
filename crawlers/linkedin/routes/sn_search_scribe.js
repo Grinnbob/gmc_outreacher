@@ -168,8 +168,17 @@ router.post("/sn/search/scribe", async (req, res) => {
                             result_data.data.arr[i].linkedin
                         )
                     browser = await sn_scribeAction.startBrowser()
-                    result_data.data.arr[i] = await sn_scribeAction.scribe()
+                    result_data.data.arr[i] = {
+                        ...result_data.data.arr[i],
+                        ...(await sn_scribeAction.scribe()),
+                    }
                     browser = await sn_scribeAction.closeBrowser()
+
+                    log.debug(
+                        `... completed: ${i + 1} / ${
+                            result_data.data.arr.length
+                        } ...`
+                    )
                 }
 
                 log.debug(

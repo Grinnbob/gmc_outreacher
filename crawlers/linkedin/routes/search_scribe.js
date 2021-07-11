@@ -161,14 +161,16 @@ router.post("/search/scribe", async (req, res) => {
             if (result_data.data.arr.length > 0) {
                 for (let i = 0; i < result_data.data.arr.length; i++) {
                     // start work
-                    let scribeAction =
-                        new modules.scribeAction.ScribeAction(
-                            cookies,
-                            credentials_id,
-                            result_data.data.arr[i].linkedin
-                        )
+                    let scribeAction = new modules.scribeAction.ScribeAction(
+                        cookies,
+                        credentials_id,
+                        result_data.data.arr[i].linkedin
+                    )
                     browser = await scribeAction.startBrowser()
-                    result_data.data.arr[i] = await scribeAction.scribe()
+                    result_data.data.arr[i] = {
+                        ...result_data.data.arr[i],
+                        ...(await scribeAction.scribe()),
+                    }
                     browser = await scribeAction.closeBrowser()
                 }
 
