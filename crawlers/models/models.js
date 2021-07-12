@@ -59,6 +59,11 @@ let userSchema = new Schema({
         default: null,
     },
 
+    role: {
+        type: Number,
+        default: 1, // 1 = user, 2 = api user, 3 = admin
+    },
+
     status: {
         type: Number,
         default: 0, // 0 = test user, 1 = active, 2 = archived
