@@ -10,6 +10,7 @@ let accountsSchema = new Schema({
 
     user_id: {
         type: mongoose.ObjectId,
+        required: true
     },
 
     status: {
@@ -34,6 +35,11 @@ let accountsSchema = new Schema({
         default: null,
     },
 
+    type: {
+        type: Number,
+        default: 1, // 1 = linkedin
+    },
+
     blocking_type: {
         type: String,
         default: null,
@@ -48,10 +54,12 @@ let accountsSchema = new Schema({
 let userSchema = new Schema({
     login: {
         type: String,
+        required: true
     },
 
     password: {
         type: String,
+        required: true
     },
 
     token: {
@@ -73,15 +81,17 @@ let userSchema = new Schema({
 let actionSchema = new Schema({
     action: {
         type: Number, // action type
+        required: true
     },
 
     user_id: {
         type: mongoose.ObjectId,
+        required: true
     },
 
     timestamp: {
         type: String,
-        default: null,
+        default: Date(),
     },
 
     status: {
