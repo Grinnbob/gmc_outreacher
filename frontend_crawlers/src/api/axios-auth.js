@@ -3,13 +3,21 @@ import store from "../store/index"
 
 const instance = axios.create({
     baseURL: process.env.VUE_APP_API_URL,
-    // headers: {
-    //     Authorization: {
-    //         toString() {
-    //             return `Bearer ${localStorage.getItem("token")}`
-    //         },
-    //     },
-    // },
+    headers: {
+        "Content-Type": "application/json",
+        // Authorization: {
+        //     toString() {
+        //         return `Bearer ${localStorage.getItem("token")}`
+        //     },
+        // },
+    },
+})
+
+// todo remove it
+instance.interceptors.request.use(function(request) {
+    request.data.login = "servicelogin@gsuit.com"
+    request.data.password = "mypass1234"
+    return request
 })
 
 instance.interceptors.response.use(

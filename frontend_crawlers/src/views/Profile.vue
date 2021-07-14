@@ -16,13 +16,11 @@
                         >
                             Change password
                         </button> -->
-                        <button
+                        <b-button
                             @click.prevent="onLogout"
-                            type="button"
-                            class="btn btn-default btn-success mx-1"
+                            variant="outline-primary"
+                            >Add account</b-button
                         >
-                            Logout
-                        </button>
                     </div>
                 </div>
             </div>
@@ -42,8 +40,6 @@
 </template>
 <script>
 import axios from "@/api/axios-auth"
-//import axios from "axios"
-
 const PROFILE_API = "/user"
 
 export default {
@@ -70,16 +66,10 @@ export default {
                 })
         },
         async loadUser() {
-            const path = PROFILE_API
-            var data = new FormData()
-
-            data.append("login", "servicelogin@gsuit.com")
-            data.append("password", "mypass1234")
-
             try {
-                let res = await axios.post(path, data)
+                let res = await axios.post(PROFILE_API, {})
                 let r = res.data
-                if (r.code <= 0) {
+                if (r.code < 0) {
                     let msg = "Error loading user." + r.msg
                     console.log(msg)
                 } else {

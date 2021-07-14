@@ -5,6 +5,7 @@ const DashboardLayout = () => import("../containers/DashboardLayout.vue")
 const LinkedinGeneral = () => import("../views/Linkedin/General.vue")
 const Profile = () => import("../views/Profile.vue")
 const Accounts = () => import("../views/Accounts.vue")
+const AccountAdd = () => import("../views/AccountAdd.vue")
 
 Vue.use(VueRouter)
 const routes = [
@@ -27,6 +28,11 @@ const routes = [
                 path: "/accounts",
                 name: "Accounts",
                 component: Accounts,
+            },
+            {
+                path: "/account/add",
+                name: "Add account",
+                component: AccountAdd,
             },
         ],
     },
