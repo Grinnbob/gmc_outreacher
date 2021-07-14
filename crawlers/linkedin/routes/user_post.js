@@ -9,7 +9,7 @@ const status_codes = require("../status_codes")
 
 /**
  * @swagger
- * /user:
+ * /user/create:
  *   post:
  *     summary: Create user.
  *     description: Create user.
@@ -45,26 +45,37 @@ const status_codes = require("../status_codes")
  *                   description: some expression
  *                   example: false
  */
-router.post("/user", async (req, res) => {
+router.post("/user/create", async (req, res) => {
     let result_data = {}
     let task = req.body
-    console.log("...task: ...", task)
 
     try {
-        // create user
-        let user = await models.Users.create({
-            login: task.login,
-            password: task.password,
-        })
+        let user = await models.Users.findOne({ login: task.login })
 
-        console.log("... user created: ...", user)
+        if (user) {
+            log.debug("User already exists")
+            result_data = {
+                if_true: false,
+                code: -1,
+                raw: 'User already exists',
+            }
 
-        result_data = {
-            if_true: true,
-            code: 0,
-            data: {
-                login: user.login,
-            },
+        } else {
+            // create user
+            user = await models.Users.create({
+                login: task.login,
+                password: task.password,
+            })
+
+            console.log("... user created: ...", user)
+
+            result_data = {
+                if_true: true,
+                code: 0,
+                data: {
+                    login: user.login,
+                },
+            }
         }
     } catch (err) {
         log.error("create user error:", err.stack)
