@@ -19,7 +19,7 @@
                         <b-button
                             @click.prevent="onLogout"
                             variant="outline-primary"
-                            >Add account</b-button
+                            >Add profile</b-button
                         >
                     </div>
                 </div>

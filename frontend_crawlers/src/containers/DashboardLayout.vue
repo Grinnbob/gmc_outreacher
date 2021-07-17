@@ -20,6 +20,7 @@
                 <b-nav-item-dropdown text="Settings" right>
                     <b-dropdown-item href="/profile">Profile</b-dropdown-item>
                     <b-dropdown-item href="/accounts">Accounts</b-dropdown-item>
+                    <b-dropdown-item href="/actions">Actions</b-dropdown-item>
                     <b-dropdown-item href="#">Billing</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>

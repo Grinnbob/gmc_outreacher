@@ -1,0 +1,75 @@
+<template>
+    <div>
+        <card>
+            <div class="container">
+                <div class="row">
+                    <div class="col-4 d-flex align-self-center">
+                        <h3>Linkedin actions</h3>
+                    </div>
+                </div>
+            </div>
+        </card>
+
+        <card>
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col d-flex align-self-center">
+                        <b-list-group>
+                            <b-list-group-item href="/linkedin/profile"
+                                >Get profile info</b-list-group-item
+                            >
+                            <b-list-group-item href="/linkedin/sn/profile"
+                                >Get Sales Navigator profile
+                                info</b-list-group-item
+                            >
+                            <b-list-group-item href="/linkedin/search"
+                                >Get profiles with basic info from
+                                search</b-list-group-item
+                            >
+                            <b-list-group-item href="/linkedin/search/scribe"
+                                >Get profiles with detailed info from
+                                search</b-list-group-item
+                            >
+                            <b-list-group-item href="/linkedin/sn/search"
+                                >Search SN</b-list-group-item
+                            >
+                            <b-list-group-item href="/linkedin/sn/search/scribe"
+                                >Get profiles with detailed info from Sales
+                                Navigator search</b-list-group-item
+                            >
+                            <b-list-group-item href="/linkedin/post"
+                                >Get info from post - likes, comments,
+                                etc</b-list-group-item
+                            >
+                        </b-list-group>
+                    </div>
+                </div>
+            </div>
+        </card>
+    </div>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            account_data: [],
+        }
+    },
+    computed: {},
+    methods: {},
+    async mounted() {},
+    created() {},
+}
+</script>
+<style>
+.card_title {
+    text-align: center;
+    font-size: 35px;
+    font-weight: 500;
+}
+.info {
+    font-size: 20px;
+    font-weight: 600;
+    height: 10px;
+}
+</style>

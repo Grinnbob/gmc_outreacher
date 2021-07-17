@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-4 d-flex align-self-center">
                         <h3>
-                            <i class="nc-icon nc-circle-09"></i> Add account
+                            Add account
                         </h3>
                     </div>
                 </div>
@@ -19,20 +19,22 @@
                         <p>
                             Enter your linkedin li_at cookie. To get them -
                             download
-                            <a
+                            <b-link
                                 href="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg/related?hl=en"
                                 target="_blank"
-                                >chrome extension</a
+                                >chrome extension</b-link
                             >
                             for get cookies and go to your
-                            <a href="https://www.linkedin.com" target="_blank"
-                                >linkedin page</a
+                            <b-link
+                                href="https://www.linkedin.com"
+                                target="_blank"
+                                >linkedin page</b-link
                             >
                             and extract exactly li_at value and paste here
                         </p>
                     </b-col>
                 </b-row>
-                <!-- <b-row class="my-1">
+                <b-row class="my-1">
                     <b-col sm="2">
                         <label for="input-default">Login:</label>
                     </b-col>
@@ -43,7 +45,7 @@
                         ></b-form-input>
                     </b-col>
                 </b-row>
-                <b-row class="my-1">
+                <!-- <b-row class="my-1">
                     <b-col sm="2">
                         <label for="input-default">Password:</label>
                     </b-col>
@@ -96,13 +98,18 @@ export default {
     methods: {
         async onAddAccount() {
             try {
+                if (this.login == "") {
+                    console.log("empty login")
+                    return
+                }
+
                 if (this.li_at == "") {
                     console.log("empty li_at")
                     return
                 }
 
                 let res = await axios.post(ACCOUNTS_API, {
-                    input_data: { li_at: this.li_at },
+                    input_data: { li_at: this.li_at, login: this.login },
                 })
                 let r = res.data
                 if (r.code < 0) {

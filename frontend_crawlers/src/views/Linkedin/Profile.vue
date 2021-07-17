@@ -26,9 +26,6 @@
                         <b-table
                             striped
                             hover
-                            bordered
-                            borderless
-                            small
                             fixed
                             :items="account_data.map(accountsMapping)"
                         ></b-table>
@@ -41,54 +38,41 @@
 <script>
 import axios from "@/api/axios-auth"
 
-const ACCOUNTS_API = "/accounts"
+const ACCTIONS_API = "/actions"
 
 export default {
     data() {
         return {
-            account_data: [],
+            actions_data: [],
         }
     },
     computed: {},
     methods: {
-        accountsMapping(el) {
-            let new_el = {}
-            if (el.status === -1) return // deleted account
-            new_el.login = el.login
-            new_el.type = el.type === 1 ? "linkedin" : "unknown"
-            new_el.status =
-                el.status === 0
-                    ? "active"
-                    : el.status === 1
-                    ? "blocked"
-                    : "unknown"
-            if (el.cookies && el.cookies.length > 0)
-                new_el.li_at = el.cookies.find((c) => c.name === "li_at").value
-
-            return new_el
-        },
+        accountsMapping(el) {},
         async onAddAccount() {
             this.$router.push({ path: "/account/add" })
         },
-        async loadAccounts() {
+        async loadActions() {
             try {
-                let res = await axios.post(ACCOUNTS_API, {})
+                let res = await axios.post(ACCTIONS_API, {
+                    input_data: { action: 6 },
+                })
                 let r = res.data
                 if (r.code < 0) {
-                    let msg = "Error loading accounts." + r.msg
+                    let msg = "Error loading actions." + r.msg
                     console.log(msg)
                 } else {
-                    this.account_data = r.data
-                    console.log("accounts: ", this.account_data)
+                    this.actions_data = r.data
+                    console.log("actions: ", this.actions_data)
                 }
             } catch (error) {
-                let msg = "Error loading accounts. ERROR: " + error
+                let msg = "Error loading actions. ERROR: " + error
                 console.error(msg, error.stack)
             }
         },
     },
     async mounted() {
-        await this.loadAccounts()
+        await this.loadActions()
     },
     created() {},
 }
