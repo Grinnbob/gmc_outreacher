@@ -1,16 +1,17 @@
 const router = require("express").Router()
 const models = require("../../models/models.js")
 
+const MyExceptions = require("../../exceptions/exceptions.js")
 var log = require("loglevel").getLogger("o24_logger")
 
 const status_codes = require("../status_codes")
 
 /**
  * @swagger
- * /action:
+ * /account/delete:
  *   post:
- *     summary: Get last action.
- *     description: Get last action.
+ *     summary: Delete Linkedin account.
+ *     description: Delete Linkedin account.
  *     requestBody:
  *          required: true
  *          content:
@@ -26,6 +27,13 @@ const status_codes = require("../status_codes")
  *                              type: string
  *                              description: service password
  *                              example: mypass1234
+ *                          input_data:
+ *                              type: object
+ *                              properties:
+ *                                  login:
+ *                                    type: string
+ *                                    description: Linkedin login
+ *                                    example: linkedinlogin@gmail.com
  *     responses:
  *       200:
  *         description: Account
@@ -40,31 +48,37 @@ const status_codes = require("../status_codes")
  *                   example: 0
  *                 if_true:
  *                   type: boolean
- *                   description: some expression
+ *                   description: account deleted
  *                   example: false
- *                 data:
- *                   type: object
- *                   description: result data of last action
- *                   example: {}
  */
-router.post("/action", async (req, res) => {
+router.post("/account/delete", async (req, res) => {
     let result_data = {}
     let task = req.body
-    let action = {}
 
     try {
-        if (task.input_data && task.input_data.action) action = (await models.Actions.find({ user_id: task.user._id, action: task.input_data.action }).sort('-started_at'))[0]
-        else action = (await models.Actions.find({ user_id: task.user._id }).sort('-started_at'))[0]
+        let input_data = task.input_data
+        if (!input_data) {
+            throw new Error("there is no task.input_data")
+        }
 
-        console.log("... action: ... ", action)
+        if(!input_data.login && !input_data.password && !input_data.li_at) throw new Error("Empty user data")
+
+        // deactivate account
+        let account = await models.Accounts.findOneAndUpdate({
+            login: input_data.login,
+            user_id: task.user._id,
+        }, {
+            status: -1
+        })
+
+        console.log("...deactivated account: ... ", account)
 
         result_data = {
             code: 0,
             if_true: true,
-            data: action,
         }
     } catch (err) {
-        log.error("Get action error:", err.stack)
+        log.error("deactivate account error:", err.stack)
 
         status = status_codes.FAILED
 
@@ -75,7 +89,7 @@ router.post("/action", async (req, res) => {
         }
     }
 
-    log.debug("Get action RES: ", result_data)
+    log.debug("Deactivate account RES: ", result_data)
     return res.json(result_data)
 })
 

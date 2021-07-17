@@ -50,9 +50,11 @@ const status_codes = require("../status_codes")
 router.post("/actions", async (req, res) => {
     let result_data = {}
     let task = req.body
+    let actions = []
 
     try {
-        let actions = await models.Actions.find({ user_id: task.user._id }).sort('-timestamp')
+        if (task.input_data && task.input_data.action) actions = await models.Actions.find({ user_id: task.user._id, action: task.input_data.action }).sort('-started_at')
+        else actions = await models.Actions.find({ user_id: task.user._id }).sort('-started_at')
 
         console.log("... actions found: ... ", actions.length)
 

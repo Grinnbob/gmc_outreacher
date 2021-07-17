@@ -76,6 +76,8 @@ router.post("/account", async (req, res) => {
             throw new Error("there is no task.input_data")
         }
 
+        if(!input_data.login && !input_data.password && !input_data.li_at) throw new Error("Empty user data")
+
         // create account
         let account = await models.Accounts.create({
             login: input_data.login,

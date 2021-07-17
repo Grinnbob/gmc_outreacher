@@ -58,14 +58,43 @@ app.use(async (req, res, next) => {
             return next("Wrong password")
 
         log.debug("User checked")
-
+        console.log('body:', req.body)
         next()
     } else {
-        log.error("Auth error - empty login / password in request")
-        
+        //log.error("Auth error - empty login / password in request")
+        console.log('body:', req.body)
+        next("Auth error - empty login / password in request")
     }
-    console.log('body:', req.body)
 })
+
+// check credentials
+app.use(async (req, res, next) => {
+    if (req.body.credentials_id) {
+        let account = await models.Accounts.findOne({ _id: req.body.credentials_id })
+
+        if (account == null) return next("Account not found")
+        if (account.status === -1) return next("Account deleted")
+        if (account.status === -2) return next("Account blocked")
+
+        log.debug("account checked")
+    }
+
+    next()
+})
+
+// app.use(async (req, res, next) => {
+//     console.log('migration started')
+
+//     let actions = await models.Actions.find()
+//     for(let action of actions) {
+//         action.started_at = action.timestamp
+//         action.finished_at = action.timestamp
+//         delete action.timestamp
+//         await models.Actions.findOneAndUpdate({ _id: action._id }, action)
+//     }
+
+//     console.log('migrated ', actions.length)
+// })
 
 // passport.use(
 //     new localStrategy(async (login, password, done) => {
@@ -85,19 +114,19 @@ app.use(async (req, res, next) => {
 // )
 
 // Add headers
-app.use(function (req, res, next) {
-    // res.setHeader("Access-Control-Allow-Origin", "*")
-    // res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
-    // res.setHeader(
-    //     "Access-Control-Allow-Headers",
-    //     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    // )
+// app.use(function (req, res, next) {
+//     res.setHeader("Access-Control-Allow-Origin", "*")
+//     res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
+//     res.setHeader(
+//         "Access-Control-Allow-Headers",
+//         "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//     )
 
-    // res.setHeader('Access-Control-Allow-Credentials', true)
+//     res.setHeader('Access-Control-Allow-Credentials', true)
 
-    // Pass to next layer of middleware
-    next()
-})
+//     //Pass to next layer of middleware
+//     next()
+// })
 
 fs.readdirSync(routes_path).forEach(function (file) {
     app.use(require(routes_path + file))
