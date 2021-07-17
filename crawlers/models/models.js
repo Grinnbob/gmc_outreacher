@@ -15,7 +15,7 @@ let accountsSchema = new Schema({
 
     status: {
         type: Number,
-        default: 0,
+        default: 0, // 0 = active, -2 = blocked by Linkedin, -1 = deleted
     },
 
     login: {
@@ -89,7 +89,12 @@ let actionSchema = new Schema({
         required: true
     },
 
-    timestamp: {
+    started_at: {
+        type: String,
+        default: Date(),
+    },
+
+    finished_at: {
         type: String,
         default: Date(),
     },

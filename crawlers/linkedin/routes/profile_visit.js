@@ -86,7 +86,7 @@ router.post("/profile/visit", async (req, res) => {
             action = await models.Actions.create({
                 action: action_codes.linkedin_visit_profile,
                 user_id: task.user._id,
-                timestamp: new Date(),
+                started_at: new Date(),
                 status: 0,
                 ack: 1,
                 input_data: input_data,
@@ -157,7 +157,7 @@ router.post("/profile/visit", async (req, res) => {
         await models.Actions.findOneAndUpdate(
             { _id: action._id },
             {
-                timestamp: new Date(),
+                finished_at: new Date(),
                 status: result_data.code === 0 ? 1 : -1,
                 ack: 0,
                 result_data: result_data,
