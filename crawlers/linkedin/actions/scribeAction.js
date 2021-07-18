@@ -22,12 +22,22 @@ class ScribeAction extends action.Action {
       company_linkedin_page: '',
       company_name: '',
       company_url: '',
-      linkedin_sn: ''
+      linkedin_sn: '',
+
+      // contact info
+      websites: [],
+      emails: [],
+      phone: '',
+      address: '',
+      twitter: '',
+      birthday: '',
+      im: '',
+      connected_date: ''
     }
     let selector
     let selector_res
 
-    result = await this.scribe_contact_info()
+    result = await this.scribe_contact_info(result)
 
     // check current url here
     let current_url = this.page.url()
@@ -45,7 +55,9 @@ class ScribeAction extends action.Action {
     if(selector_res) {
       selector = selectors.COUNTRY_SELECTOR
       result.location = await this.page.evaluate((selector) => {
-        return document.querySelector(selector).innerText
+        if(document.querySelector(selector))
+          return document.querySelector(selector).innerText
+        else return ''
       }, selector)
 
       log.debug("ScribeAction: location added")
@@ -56,15 +68,21 @@ class ScribeAction extends action.Action {
     if(selector_res) {
       selector = selectors.EDUCATION_SELECTOR
       result.education = await this.page.evaluate((selector) => {
-        return document.querySelector(selector).innerText
+        if(document.querySelector(selector))
+          return document.querySelector(selector).innerText
+        else return ''
       }, selector)
 
       log.debug("ScribeAction: education added")
     }
 
     // Sales Navigator link 
-    result.linkedin_sn = await this._get_linkedin_sn(this.page) || null
-    log.debug("ScribeAction: Sales Navigator link added:", result.linkedin_sn)
+    try {
+      result.linkedin_sn = await this._get_linkedin_sn(this.page) || null
+      log.debug("ScribeAction: Sales Navigator link added:", result.linkedin_sn)
+    } catch (err) {
+      log.error("ScribeAction: _get_linkedin_sn broken:", err)
+    }
 
     // company informatiom
     let mySelectors = {
@@ -77,7 +95,9 @@ class ScribeAction extends action.Action {
     selector_res = await utils.check_success_selector(selectors.JOB_LINK_SELECTOR, this.page)
     if(selector_res) {
       result.company_linkedin_page = await this.page.evaluate((mySelectors) => {
-        return document.querySelector(mySelectors.selector1).href
+        if(document.querySelector(mySelectors.selector1))
+          return document.querySelector(mySelectors.selector1).href
+        else return ''
       }, mySelectors)
 
       log.debug("ScribeAction: company linkedin page added")
@@ -86,7 +106,9 @@ class ScribeAction extends action.Action {
       selector_res = await utils.check_success_selector(selectors.JOB_SELECTOR, this.page)
       if(selector_res) {
         result.job_title = await this.page.evaluate((mySelectors) => {
-          return document.querySelector(mySelectors.selector1).querySelector(mySelectors.selector2).innerText
+          if(document.querySelector(mySelectors.selector1).querySelector(mySelectors.selector2))
+            return document.querySelector(mySelectors.selector1).querySelector(mySelectors.selector2).innerText
+          else return ''
         }, mySelectors)
 
         log.debug("ScribeAction: job title added")
@@ -96,7 +118,9 @@ class ScribeAction extends action.Action {
       selector_res = await utils.check_success_selector(selectors.COMPANY_NAME_SELECTOR, this.page)
       if(selector_res) {
         result.company_name = await this.page.evaluate((mySelectors) => {
-          return document.querySelector(mySelectors.selector1).querySelector(mySelectors.selector3).innerText
+          if(document.querySelector(mySelectors.selector1).querySelector(mySelectors.selector3))
+            return document.querySelector(mySelectors.selector1).querySelector(mySelectors.selector3).innerText
+          else return ''
         }, mySelectors)
 
         log.debug("ScribeAction: company name added")
@@ -110,7 +134,9 @@ class ScribeAction extends action.Action {
       if(selector_res) {
         selector = selectors.JOB_SITE_SELECTOR
         result.company_url = await this.page.evaluate((selector) => {
-          return document.querySelector(selector).innerText
+          if(document.querySelector(selector))
+            return document.querySelector(selector).href
+          else return ''
         }, selector)
 
         log.debug("ScribeAction: company website added")
@@ -122,8 +148,7 @@ class ScribeAction extends action.Action {
   }
 
 
-  async scribe_contact_info() {
-    let result = {}
+  async scribe_contact_info(result) {
     let mySelector = ''
     log.debug("ScribeAction: scribe_contact_info started")
 
@@ -153,7 +178,7 @@ class ScribeAction extends action.Action {
         return result
       }, mySelector)
 
-      if(websites != null && websites.length > 0) {
+      if(websites && websites.length > 0) {
         result.websites = websites
 
         log.debug("ScribeAction: websites added")
@@ -166,7 +191,9 @@ class ScribeAction extends action.Action {
       mySelector = selectors.CONTACT_INFO_PHONE_SELECTOR
 
       result.phone = await this.page.evaluate((mySelector) => {
-        return document.querySelector(mySelector).innerText
+        if(document.querySelector(mySelector))
+          return document.querySelector(mySelector).innerText
+        else return ''
       }, mySelector)
 
       log.debug("ScribeAction: phone added")
@@ -178,7 +205,9 @@ class ScribeAction extends action.Action {
       mySelector = selectors.CONTACT_INFO_ADDRESS_SELECTOR
 
       result.address = await this.page.evaluate((mySelector) => {
-        return document.querySelector(mySelector).innerText
+        if(document.querySelector(mySelector))
+          return document.querySelector(mySelector).innerText
+        else return ''
       }, mySelector)
 
       log.debug("ScribeAction: address added")
@@ -209,7 +238,9 @@ class ScribeAction extends action.Action {
       mySelector = selectors.CONTACT_INFO_TWITTER_SELECTOR
 
       result.twitter = await this.page.evaluate((mySelector) => {
-        return document.querySelector(mySelector).innerText
+        if(document.querySelector(mySelector))
+          return document.querySelector(mySelector).innerText
+        else return ''
       }, mySelector)
 
       log.debug("ScribeAction: twitter added")
@@ -221,7 +252,9 @@ class ScribeAction extends action.Action {
       mySelector = selectors.CONTACT_INFO_IM_SELECTOR
 
       result.im = await this.page.evaluate((mySelector) => {
-        return document.querySelector(mySelector).innerText
+        if(document.querySelector(mySelector))
+          return document.querySelector(mySelector).innerText
+        else return ''
       }, mySelector)
 
       log.debug("ScribeAction: im added")
@@ -233,7 +266,9 @@ class ScribeAction extends action.Action {
       mySelector = selectors.CONTACT_INFO_BIRTHDAY_SELECTOR
 
       result.birthday = await this.page.evaluate((mySelector) => {
-        return document.querySelector(mySelector).innerText
+        if(document.querySelector(mySelector))
+          return document.querySelector(mySelector).innerText
+        else return ''
       }, mySelector)
 
       log.debug("ScribeAction: birthday added")
@@ -245,7 +280,9 @@ class ScribeAction extends action.Action {
       mySelector = selectors.CONTACT_INFO_CONNECTED_DATE_SELECTOR
 
       result.connected_date = await this.page.evaluate((mySelector) => {
-        return document.querySelector(mySelector).innerText
+        if(document.querySelector(mySelector))
+          return document.querySelector(mySelector).innerText
+        else return ''
       }, mySelector)
 
       log.debug("ScribeAction: connected date added")
@@ -293,7 +330,9 @@ class ScribeAction extends action.Action {
       // Sales Navigator link #2
       let selector = selectors.LINK_TO_SN_SELECTOR
       let linkedin_sn = await this.page.evaluate((selector) => {
-        return document.querySelector(selector).href
+        if(document.querySelector(selector))
+          return document.querySelector(selector).href
+        else return ''
       }, selector)
 
       log.debug("ScribeAction: Sales Navigator link #2 linkedin_sn:", linkedin_sn)

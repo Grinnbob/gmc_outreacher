@@ -126,7 +126,7 @@ router.post("/search", async (req, res) => {
             action = await models.Actions.create({
                 action: action_codes.linkedin_search,
                 user_id: task.user._id,
-                started_at: new Date(),
+                started_at: Date.now(),
                 status: 0,
                 ack: 1,
                 input_data: input_data,
@@ -194,7 +194,7 @@ router.post("/search", async (req, res) => {
         await models.Actions.findOneAndUpdate(
             { _id: action._id },
             {
-                finished_at: new Date(),
+                finished_at: Date.now(),
                 status: result_data.code >= 0 ? 1 : -1,
                 ack: 0,
                 result_data: result_data,
