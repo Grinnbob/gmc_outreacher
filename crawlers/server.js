@@ -87,13 +87,12 @@ app.use(async (req, res, next) => {
 
 //     let actions = await models.Actions.find()
 //     for(let action of actions) {
-//         action.started_at = action.timestamp
-//         action.finished_at = action.timestamp
-//         delete action.timestamp
+//         action.started_at = Date.parse(action.started_at)
+//         action.finished_at = Date.parse(action.finished_at)
 //         await models.Actions.findOneAndUpdate({ _id: action._id }, action)
 //     }
 
-//     console.log('migrated ', actions.length)
+//     console.log('migrated: ', actions.length)
 // })
 
 // passport.use(

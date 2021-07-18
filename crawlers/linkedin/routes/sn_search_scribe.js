@@ -11,7 +11,7 @@ const status_codes = require("../status_codes")
 const action_codes = require("../action_codes").action_codes
 
 
-async function scribeWorker(result_data, browser, action, task) {
+async function scribeWorker(result_data, browser, action, task, cookies, credentials_id) {
     try {
         if (result_data.data.arr.length > 0) {
             for (let i = 0; i < result_data.data.arr.length; i++) {
@@ -43,22 +43,24 @@ async function scribeWorker(result_data, browser, action, task) {
 
         result_data.data = JSON.stringify(result_data.data)
 
-        try {
-            // update action
-            await models.Actions.findOneAndUpdate(
-                { _id: action._id },
-                {
-                    finished_at: new Date(),
-                    status: result_data.code >= 0 ? 1 : -1,
-                    ack: 0,
-                    result_data: result_data,
-                }
-            )
-        } catch (err) {
-            log.error(`Can't update action for ${task.user.login}`)
-        }
     } catch (err) {
+        log.error("sn_searcScribehWorker error:", err)
         log.error("sn_searcScribehWorker error:", err.stack)
+    }
+
+    try {
+        // update action
+        await models.Actions.findOneAndUpdate(
+            { _id: action._id },
+            {
+                finished_at: Date.now(),
+                status: result_data.code >= 0 ? 1 : -1,
+                ack: 0,
+                result_data: result_data,
+            }
+        )
+    } catch (err) {
+        log.error(`Can't update action for ${task.user.login}`)
     }
 
     log.debug("sn_searcScribehWorker RES: ", result_data)
@@ -185,7 +187,7 @@ router.post("/sn/search/scribe", async (req, res) => {
             action = await models.Actions.create({
                 action: action_codes.linkedin_search_scribe_sn,
                 user_id: task.user._id,
-                started_at: new Date(),
+                started_at: Date.now(),
                 status: 0,
                 ack: 1,
                 input_data: input_data,
@@ -217,7 +219,7 @@ router.post("/sn/search/scribe", async (req, res) => {
             `... search completed: ${result_data.data.arr.length} found ...`
         )
 
-        scribeWorker(result_data, browser, action, task) // NOT await
+        scribeWorker(result_data, browser, action, task, cookies, credentials_id) // NOT await
 
     } catch (err) {
         log.error("sn_searcScribehWorker error:", err.stack)

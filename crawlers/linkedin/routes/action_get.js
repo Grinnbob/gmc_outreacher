@@ -53,8 +53,11 @@ router.post("/action", async (req, res) => {
     let action = {}
 
     try {
-        if (task.input_data && task.input_data.action) action = (await models.Actions.find({ user_id: task.user._id, action: task.input_data.action }).sort('-started_at'))[0]
-        else action = (await models.Actions.find({ user_id: task.user._id }).sort('-started_at'))[0]
+        let actions = []
+        if (task.input_data && task.input_data.action) actions = await models.Actions.find({ user_id: task.user._id, action: task.input_data.action }).sort('-started_at')
+        else actions = await models.Actions.find({ user_id: task.user._id }).sort('-started_at')
+
+        action = actions[actions.length - 1]
 
         console.log("... action: ... ", action)
 

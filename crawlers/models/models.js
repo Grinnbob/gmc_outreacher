@@ -90,13 +90,13 @@ let actionSchema = new Schema({
     },
 
     started_at: {
-        type: String,
-        default: Date(),
+        type: Number,
+        default: Date.now(),
     },
 
     finished_at: {
-        type: String,
-        default: Date(),
+        type: Number,
+        default: Date.now(),
     },
 
     status: {
