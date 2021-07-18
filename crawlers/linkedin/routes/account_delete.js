@@ -61,15 +61,18 @@ router.post("/account/delete", async (req, res) => {
             throw new Error("there is no task.input_data")
         }
 
-        if(!input_data.login && !input_data.password && !input_data.li_at) throw new Error("Empty user data")
+        if(!input_data.login) throw new Error("Empty account login")
 
         // deactivate account
         let account = await models.Accounts.findOneAndUpdate({
+            //_id: task.credentials_id,
             login: input_data.login,
             user_id: task.user._id,
         }, {
             status: -1
         })
+
+        //let account = await models.Accounts.deleteOne({ _id: input_data.login})
 
         console.log("...deactivated account: ... ", account)
 

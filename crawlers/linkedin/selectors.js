@@ -16,15 +16,16 @@ module.exports.CAPTCHA_RESPONSE_SELECTOR = "#g-recaptcha-response"
 module.exports.SUBMIT_CAPTCHA_BTN_SELECTOR = "" // delete
 
 // search
-module.exports.SEARCH_ELEMENT_SELECTOR =
-    ".search-result__wrapper .search-result__info"
-module.exports.LINK_SELECTOR = "span > .actor-name"
-module.exports.FULL_NAME_SELECTOR = "span > .actor-name"
-module.exports.DEGREE_SELECTOR = "span > .dist-value"
+module.exports.SEARCH_ELEMENT_SELECTOR = ".entity-result__content"
+module.exports.LINK_SELECTOR = "a"
+module.exports.FULL_NAME_SELECTOR = ".entity-result__title-text a span span"
+module.exports.MEMBER_NAME_SELECTOR = ".entity-result__title-text"
+module.exports.DEGREE_SELECTOR = ".entity-result__badge span"
 module.exports.NEXT_PAGE_SELECTOR = ".artdeco-pagination__button--next"
 module.exports.NEXT_PAGE_MUTED_SELECTOR =
     ".artdeco-pagination__button--next.artdeco-button--disabled"
-module.exports.SEARCH_JOB_SELECTOR = ".search-result__snippets-black"
+module.exports.SEARCH_JOB_SELECTOR = ".entity-result__primary-subtitle"
+module.exports.SEARCH_LOCATION_SELECTOR = ".entity-result__secondary-subtitle"
 
 // search SN
 module.exports.SN_CLOSE_HELP_SELECTOR = "#global-nav-help-menu-trigger-button"

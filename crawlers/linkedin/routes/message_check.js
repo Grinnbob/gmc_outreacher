@@ -154,7 +154,7 @@ router.post("/message/check", async (req, res) => {
             { _id: action._id },
             {
                 finished_at: new Date(),
-                status: result_data.code === 0 ? 1 : -1,
+                status: result_data.code >= 0 ? 1 : -1,
                 ack: 0,
                 result_data: result_data,
             }

@@ -15,11 +15,33 @@ class SN_ScribeAction extends action.Action {
   async scribe() {
     await super.gotoChecker(this.url)
 
-    let result = {}
+    let result = {
+      location: '',
+      education: '',
+      linkedin: '',
+      job_title: '',
+      company_name: '',
+      company_linkedin_page: '',
+      company_url: '',
+
+      // contact info
+      websites: [],
+      emails: [],
+      phone: '',
+      address: '',
+      twitter: '',
+      skype: '',
+      wechat: '',
+      icq: '',
+      aim: '',
+      yahoo: '',
+      qq: '',
+      hangouts: ''
+    }
     let selector
     let selector_res
 
-    result = await this.scribe_contact_info()
+    result = await this.scribe_contact_info(result)
 
     await super.autoScroll(this.page)
 
@@ -149,8 +171,7 @@ class SN_ScribeAction extends action.Action {
   }
 
 
-  async scribe_contact_info() {
-    let result = {}
+  async scribe_contact_info(result) {
     let mySelector = ''
     log.debug("SN_ScribeAction: scribe_contact_info started")
 
@@ -214,7 +235,7 @@ class SN_ScribeAction extends action.Action {
       mySelector = selectors.SN_CONTACT_INFO_SOCIAL_SELECTOR
 
       let social = await this.page.evaluate((mySelector) => {
-        let result = {}
+        let local_result = {}
         let elements = document.querySelectorAll(mySelector)
 
         if(elements != null && elements.length > 0) {
@@ -222,34 +243,34 @@ class SN_ScribeAction extends action.Action {
           for(let elem of elements) {
             if(elem.querySelector('span') != null && elem.querySelector('a') != null) {
               if(elem.querySelector('span').innerText.toLowerCase().includes('twitter')) {
-                result.twitter = elem.querySelector('a').href
+                local_result.twitter = elem.querySelector('a').href
               }
               if(elem.querySelector('span').innerText.toLowerCase().includes('skype')) {
-                result.skype = elem.querySelector('a').href
+                local_result.skype = elem.querySelector('a').href
               }
               if(elem.querySelector('span').innerText.toLowerCase().includes('wechat')) {
-                result.wechat = elem.querySelector('a').href
+                local_result.wechat = elem.querySelector('a').href
               }
               if(elem.querySelector('span').innerText.toLowerCase().includes('icq')) {
-                result.icq = elem.querySelector('a').href
+                local_result.icq = elem.querySelector('a').href
               }
               if(elem.querySelector('span').innerText.toLowerCase().includes('aim')) {
-                result.aim = elem.querySelector('a').href
+                local_result.aim = elem.querySelector('a').href
               }
               if(elem.querySelector('span').innerText.toLowerCase().includes('yahoo')) {
-                result.yahoo = elem.querySelector('a').href
+                local_result.yahoo = elem.querySelector('a').href
               }
               if(elem.querySelector('span').innerText.toLowerCase().includes('qq')) {
-                result.qq = elem.querySelector('a').href
+                local_result.qq = elem.querySelector('a').href
               }
               if(elem.querySelector('span').innerText.toLowerCase().includes('hangouts')) {
-                result.hangouts = elem.querySelector('a').href
+                local_result.hangouts = elem.querySelector('a').href
               }
             }
           }
         }
 
-        return result
+        return local_result
       }, mySelector)
 
       if(social != null) {

@@ -131,8 +131,8 @@ class SN_SearchAction extends action.Action {
         //await super.check_success_selector(selectors.NEXT_PAGE_SELECTOR, this.page, result_data);
 
         await this.page.click(selectors.SN_NEXT_PAGE_SELECTOR)
-        await utils.update_cookie(this.page, this.credentials_id)
         await this.page.waitFor(2000)
+        await utils.update_cookie(this.page, this.credentials_id)
 
         // check current page
         let current_page_search_url = utils.get_search_url(this.page.url())
