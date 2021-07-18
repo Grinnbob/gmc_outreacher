@@ -198,7 +198,6 @@ class SearchAction extends action.Action {
                 //await this.page.click(selectors.NEXT_PAGE_SELECTOR)
                 await this.page.waitFor(2000) // critical here!?
                 await utils.update_cookie(this.page, this.credentials_id)
-                console.log("--- curr page --- : ", this.page.url())
 
                 // here we have to check BAN page
                 result_data.data.link = this.page.url() // we have to send NEXT page link in task

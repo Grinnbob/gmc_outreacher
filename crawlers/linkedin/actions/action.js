@@ -17,8 +17,8 @@ class Action {
     }
 
     async startBrowser() {
-        this.browser = await puppeteer.launch({ headless: false }) // test mode
-        //this.browser = await puppeteer.launch()
+        //this.browser = await puppeteer.launch({ headless: false }) // test mode
+        this.browser = await puppeteer.launch()
         this.context = await this.browser.createIncognitoBrowserContext()
         this.page = await this.context.newPage()
 
