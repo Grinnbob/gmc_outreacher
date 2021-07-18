@@ -10,6 +10,58 @@ var log = require("loglevel").getLogger("o24_logger")
 const status_codes = require("../status_codes")
 const action_codes = require("../action_codes").action_codes
 
+
+async function scribeWorker(result_data, browser, action, task) {
+    try {
+        if (result_data.data.arr.length > 0) {
+            for (let i = 0; i < result_data.data.arr.length; i++) {
+                // start work
+                let scribeAction = new modules.scribeAction.ScribeAction(
+                    cookies,
+                    credentials_id,
+                    result_data.data.arr[i].linkedin
+                )
+                browser = await scribeAction.startBrowser()
+                result_data.data.arr[i] = {
+                    ...result_data.data.arr[i],
+                    ...(await scribeAction.scribe()),
+                }
+                browser = await scribeAction.closeBrowser()
+            }
+
+            log.debug(
+                `... scribe completed: ${result_data.data.arr.length} found ...`
+            )
+        }
+
+        result_data.data = JSON.stringify(result_data.data)
+
+        try {
+            // update action
+            await models.Actions.findOneAndUpdate(
+                { _id: action._id },
+                {
+                    finished_at: new Date(),
+                    status: result_data.code >= 0 ? 1 : -1,
+                    ack: 0,
+                    result_data: result_data,
+                }
+            )
+        } catch (err) {
+            log.error(`Can't update action for ${task.user.login}`)
+        }
+    } catch (err) {
+        log.error("searcScribehWorker error:", err.stack)
+    }
+
+    log.debug("searcScribehWorker RES: ", result_data)
+
+    if (browser != null) {
+        await browser.close()
+        browser.disconnect()
+    }
+}
+
 /**
  * @swagger
  * /search/scribe:
@@ -157,30 +209,9 @@ router.post("/search/scribe", async (req, res) => {
         log.debug(
             `... search completed: ${result_data.data.arr.length} found ...`
         )
-        try {
-            if (result_data.data.arr.length > 0) {
-                for (let i = 0; i < result_data.data.arr.length; i++) {
-                    // start work
-                    let scribeAction = new modules.scribeAction.ScribeAction(
-                        cookies,
-                        credentials_id,
-                        result_data.data.arr[i].linkedin
-                    )
-                    browser = await scribeAction.startBrowser()
-                    result_data.data.arr[i] = {
-                        ...result_data.data.arr[i],
-                        ...(await scribeAction.scribe()),
-                    }
-                    browser = await scribeAction.closeBrowser()
-                }
 
-                log.debug(
-                    `... scribe completed: ${result_data.data.arr.length} found ...`
-                )
-            }
-        } catch (err) {
-            log.error("sn_searcScribehWorker error:", err.stack)
-        }
+        scribeWorker(result_data, browser, action, task) // NOT await
+
     } catch (err) {
         log.error("searchWorker error:", err.stack)
 
@@ -209,28 +240,6 @@ router.post("/search/scribe", async (req, res) => {
                 ).error,
             }
         }
-    } finally {
-        log.debug("SearchWorker RES: ", result_data)
-
-        if (browser != null) {
-            await browser.close()
-            browser.disconnect()
-        }
-    }
-
-    try {
-        // update action
-        await models.Actions.findOneAndUpdate(
-            { _id: action._id },
-            {
-                finished_at: new Date(),
-                status: result_data.code === 0 ? 1 : -1,
-                ack: 0,
-                result_data: result_data,
-            }
-        )
-    } catch (err) {
-        log.error(`Can't update action for ${task.user.login}`)
     }
 
     return res.json(result_data)

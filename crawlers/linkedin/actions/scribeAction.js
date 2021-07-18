@@ -15,7 +15,15 @@ class ScribeAction extends action.Action {
   async scribe() {
     //await super.gotoChecker(this.url)
 
-    let result = {}
+    let result = {
+      location: '',
+      education: '',
+      job_title: '',
+      company_linkedin_page: '',
+      company_name: '',
+      company_url: '',
+      linkedin_sn: ''
+    }
     let selector
     let selector_res
 

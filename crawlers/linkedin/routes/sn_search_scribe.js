@@ -10,6 +10,65 @@ var log = require("loglevel").getLogger("o24_logger")
 const status_codes = require("../status_codes")
 const action_codes = require("../action_codes").action_codes
 
+
+async function scribeWorker(result_data, browser, action, task) {
+    try {
+        if (result_data.data.arr.length > 0) {
+            for (let i = 0; i < result_data.data.arr.length; i++) {
+                // start work
+                let sn_scribeAction =
+                    new modules.sn_scribeAction.SN_ScribeAction(
+                        cookies,
+                        credentials_id,
+                        result_data.data.arr[i].linkedin
+                    )
+                browser = await sn_scribeAction.startBrowser()
+                result_data.data.arr[i] = {
+                    ...result_data.data.arr[i],
+                    ...(await sn_scribeAction.scribe()),
+                }
+                browser = await sn_scribeAction.closeBrowser()
+
+                log.debug(
+                    `... completed: ${i + 1} / ${
+                        result_data.data.arr.length
+                    } ...`
+                )
+            }
+
+            log.debug(
+                `... scribe completed: ${result_data.data.arr.length} found ...`
+            )
+        }
+
+        result_data.data = JSON.stringify(result_data.data)
+
+        try {
+            // update action
+            await models.Actions.findOneAndUpdate(
+                { _id: action._id },
+                {
+                    finished_at: new Date(),
+                    status: result_data.code >= 0 ? 1 : -1,
+                    ack: 0,
+                    result_data: result_data,
+                }
+            )
+        } catch (err) {
+            log.error(`Can't update action for ${task.user.login}`)
+        }
+    } catch (err) {
+        log.error("sn_searcScribehWorker error:", err.stack)
+    }
+
+    log.debug("sn_searcScribehWorker RES: ", result_data)
+
+    if (browser != null) {
+        await browser.close()
+        browser.disconnect()
+    }
+}
+
 /**
  * @swagger
  * /sn/search/scribe:
@@ -157,37 +216,9 @@ router.post("/sn/search/scribe", async (req, res) => {
         log.debug(
             `... search completed: ${result_data.data.arr.length} found ...`
         )
-        try {
-            if (result_data.data.arr.length > 0) {
-                for (let i = 0; i < result_data.data.arr.length; i++) {
-                    // start work
-                    let sn_scribeAction =
-                        new modules.sn_scribeAction.SN_ScribeAction(
-                            cookies,
-                            credentials_id,
-                            result_data.data.arr[i].linkedin
-                        )
-                    browser = await sn_scribeAction.startBrowser()
-                    result_data.data.arr[i] = {
-                        ...result_data.data.arr[i],
-                        ...(await sn_scribeAction.scribe()),
-                    }
-                    browser = await sn_scribeAction.closeBrowser()
 
-                    log.debug(
-                        `... completed: ${i + 1} / ${
-                            result_data.data.arr.length
-                        } ...`
-                    )
-                }
+        scribeWorker(result_data, browser, action, task) // NOT await
 
-                log.debug(
-                    `... scribe completed: ${result_data.data.arr.length} found ...`
-                )
-            }
-        } catch (err) {
-            log.error("sn_searcScribehWorker error:", err.stack)
-        }
     } catch (err) {
         log.error("sn_searcScribehWorker error:", err.stack)
 
@@ -216,28 +247,6 @@ router.post("/sn/search/scribe", async (req, res) => {
                 ).error,
             }
         }
-    } finally {
-        log.debug("sn_searcScribehWorker RES: ", result_data)
-
-        if (browser != null) {
-            await browser.close()
-            browser.disconnect()
-        }
-    }
-
-    try {
-        // update action
-        await models.Actions.findOneAndUpdate(
-            { _id: action._id },
-            {
-                finished_at: new Date(),
-                status: result_data.code === 0 ? 1 : -1,
-                ack: 0,
-                result_data: result_data,
-            }
-        )
-    } catch (err) {
-        log.error(`Can't update action for ${task.user.login}`)
     }
 
     return res.json(result_data)

@@ -37,11 +37,13 @@ class SearchAction extends action.Action {
     try {
 
       let mySelectors = {
-        selector1: selectors.SEARCH_ELEMENT_SELECTOR,
-        selector2: selectors.LINK_SELECTOR,
-        selector3: selectors.FULL_NAME_SELECTOR,
-        selector4: selectors.DEGREE_SELECTOR,
-        selector5: selectors.SEARCH_JOB_SELECTOR,
+        SEARCH_ELEMENT_SELECTOR: selectors.SEARCH_ELEMENT_SELECTOR,
+        LINK_SELECTOR: selectors.LINK_SELECTOR,
+        FULL_NAME_SELECTOR: selectors.FULL_NAME_SELECTOR,
+        DEGREE_SELECTOR: selectors.DEGREE_SELECTOR,
+        SEARCH_JOB_SELECTOR: selectors.SEARCH_JOB_SELECTOR,
+        SEARCH_LOCATION_SELECTOR: selectors.SEARCH_LOCATION_SELECTOR,
+        MEMBER_NAME_SELECTOR: selectors.MEMBER_NAME_SELECTOR
       };
 
       while (currentPage <= this.interval_pages) {
@@ -54,25 +56,41 @@ class SearchAction extends action.Action {
           // TODO: add check-selector for BAN page
           // perhaps it was BAN
           result_data.code = MyExceptions.SearchActionError().code;
-          result_data.raw = MyExceptions.SearchActionError('something went wrong - NEXT_PAGE_SELECTOR not found! page.url: ' + this.page.url()).error;
-          log.error('SearchAction: something went wrong - NEXT_PAGE_SELECTOR not found! page.url: ', this.page.url());
+          result_data.raw = MyExceptions.SearchActionError('something went wrong - SEARCH_ELEMENT_SELECTOR not found! page.url: ' + this.page.url()).error;
+          log.error('SearchAction: something went wrong - SEARCH_ELEMENT_SELECTOR not found! page.url: ', this.page.url());
           break;
         }
 
         let newData = await this.page.evaluate((mySelectors) => {
 
           let results = [];
-          let items = document.querySelectorAll(mySelectors.selector1);
+          let items = document.querySelectorAll(mySelectors.SEARCH_ELEMENT_SELECTOR);
 
           for(let item of items) {
             // don't add: noName LinkedIn members and 1st degree connections
-            if (item.querySelector(mySelectors.selector2) != null && !item.querySelector(mySelectors.selector3).innerText.toLowerCase().includes('linkedin') && (item.querySelector(mySelectors.selector4) == null || !item.querySelector(mySelectors.selector4).innerText.includes('1'))) {
-              let full_name = item.querySelector(mySelectors.selector3)
-              let full_job = document.querySelector(mySelectors.selector5)
-              
-              let result = {}
+            if (item.querySelector(mySelectors.LINK_SELECTOR) != null 
+                && !item.querySelector(mySelectors.MEMBER_NAME_SELECTOR).innerText.toLowerCase().includes('linkedin') 
+                && (item.querySelector(mySelectors.DEGREE_SELECTOR) == null 
+                || !item.querySelector(mySelectors.DEGREE_SELECTOR).innerText.includes('1'))) {
 
-              result.linkedin = item.href
+              let full_name = item.querySelector(mySelectors.FULL_NAME_SELECTOR)
+              let full_job = item.querySelector(mySelectors.SEARCH_JOB_SELECTOR)
+              let location = item.querySelector(mySelectors.SEARCH_LOCATION_SELECTOR)
+              
+              let result = {
+                linkedin: '',
+                first_name: '',
+                last_name: '',
+                job_title: '',
+                company_name: '',
+                location: ''
+              }
+
+              result.linkedin = item.querySelector(mySelectors.LINK_SELECTOR).href
+
+              if(location != null) {
+                result.location = location.innerText
+              }
 
               if(full_name != null) {
                 full_name = full_name.innerText
@@ -86,11 +104,14 @@ class SearchAction extends action.Action {
 
               if(full_job != null) {
                 full_job = full_job.innerText // -> "Текущая должность: Product Marketing Manager – Morningstar"
-                full_job = full_job.split(': ')[1]  // -> "Product Marketing Manager – Morningstar"
-                if(full_job.includes('–')) {
-                  result.job_title = full_job.substr(0, full_job.indexOf('–')) // -> "Product Marketing Manager "
-                  result.company_name = full_job.substr(full_job.indexOf('–') + 2) // -> "Morningstar"
-                } else {
+                //full_job = full_job.split(': ')[1]  // -> "Product Marketing Manager – Morningstar"
+                if(full_job.includes(' at ')) {
+                  result.job_title = full_job.substr(0, full_job.indexOf(' at ')) // -> "Product Marketing Manager "
+                  result.company_name = full_job.substr(full_job.indexOf(' at ') + 4) // -> "Morningstar"
+                } else if(full_job.includes(' - ')) {
+                  result.job_title = full_job.substr(0, full_job.indexOf(' - ')) // -> "Product Marketing Manager "
+                  result.company_name = full_job.substr(full_job.indexOf(' - ') + 4) // -> "Morningstar"
+                } else  {
                   result.job_title = full_job // ? or new param
                 }
               }
@@ -123,8 +144,22 @@ class SearchAction extends action.Action {
         }
 
         await this.page.click(selectors.NEXT_PAGE_SELECTOR)
-        await utils.update_cookie(this.page, this.credentials_id)
         await this.page.waitFor(2000) // critical here!?
+        await utils.update_cookie(this.page, this.credentials_id)
+        console.log('--- curr page --- : ', this.page.url());
+
+        // check current page
+        let current_page_search_url = utils.get_search_url(this.page.url())
+        let previous_page_search_url = utils.get_search_url(result_data.data.link)
+        if(result_data.data.link != null && current_page_search_url.includes(previous_page_search_url)) {
+          // all awailable pages has been scribed
+          result_data.code = 1000
+          //log.debug('Search_action: this.page.url():', this.page.url())
+          //log.debug('Search_action: result_data.data.link:', result_data.data.link)
+          log.debug('SearchAction: All awailable pages has been scribed!')
+          break
+        }
+
         // here we have to check BAN page
         result_data.data.link = this.page.url() // we have to send NEXT page link in task
 
