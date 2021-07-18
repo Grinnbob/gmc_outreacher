@@ -23,19 +23,16 @@
                                 info</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/search"
-                                >Get profiles with basic info from
-                                search</b-list-group-item
+                                >Search</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/search/scribe"
-                                >Get profiles with detailed info from
-                                search</b-list-group-item
+                                >Search detailed</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/sn/search"
                                 >Search SN</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/sn/search/scribe"
-                                >Get profiles with detailed info from Sales
-                                Navigator search</b-list-group-item
+                                >Search SN detailed</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/post"
                                 >Get info from post - likes, comments,

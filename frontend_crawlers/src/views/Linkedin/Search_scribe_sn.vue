@@ -5,14 +5,16 @@
                 <b-row>
                     <b-col cols="4" class="d-flex align-self-center">
                         <h3>
-                            Search SN
+                            Search SN detailed
                         </h3>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
                         <p>
-                            Get profiles with info from Sales Navigator search.
+                            Get profiles with detailed info from Sales Navigator
+                            search. This action may take a time ~ 2 min /
+                            profile
                         </p>
                     </b-col>
                 </b-row>
@@ -160,9 +162,9 @@ import axios from "@/api/axios-auth"
 
 const ACCOUNTS_API = "/accounts"
 const ACCTION_API = "/action"
-const SN_SEARCH_API = "/sn/search"
+const SN_SEARCH_API = "/sn/search/scribe"
 
-const ACTION_TYPE = 8
+const ACTION_TYPE = 12
 
 export default {
     data() {
@@ -195,6 +197,7 @@ export default {
                 }
 
                 const replacer = (key, value) => (value === null ? "" : value) // specify how you want to handle null values here
+
                 const header = Object.keys(this.last_result[0])
 
                 const csv =
@@ -280,14 +283,21 @@ export default {
                             r.data.result_data.data
                         ).arr
                     } catch (err) {
+                        try {
+                            // todo remove it
+                            this.last_result = r.data.result_data.data.arr
+                        } catch (err) {
+                            console.log("Wrong data format")
+                        }
                         console.log(
                             "can't parse result data for actions: ",
                             r.data
                         )
                     }
                     console.log("Actions: ", this.actions_data)
-                    console.log("last_result: ", this.last_result)
                 }
+
+                this.formatResult()
             } catch (error) {
                 let msg = "Error loading actions. ERROR: " + error
                 console.error(msg, error.stack)
@@ -295,6 +305,21 @@ export default {
             }
 
             this.loaded = true
+        },
+        formatResult() {
+            if (!this.last_result || this.last_result.length < 1) return
+
+            this.last_result = this.last_result.map((row) => {
+                for (let key of Object.keys(row)) {
+                    if (Array.isArray(row[key]) && row[key].length > 0)
+                        row[key] = row[key].join(", ")
+                    else if (Array.isArray(row[key]) && row[key].length === 0)
+                        row[key] = ""
+                }
+                return row
+            })
+
+            console.log("last_result: ", this.last_result)
         },
         async refresh() {
             try {
@@ -338,7 +363,7 @@ export default {
             try {
                 this.makeToast("info", "Action started")
 
-                let res = await axios.post(SN_SEARCH_API, {
+                await axios.post(SN_SEARCH_API, {
                     credentials_id: this.selected_account,
                     input_data: {
                         campaign_data: {
@@ -347,35 +372,10 @@ export default {
                         },
                     },
                 })
-
-                let r = res.data
-                if (r.code < 0) {
-                    console.log(r)
-                    this.makeToast(
-                        "danger",
-                        "Can't make this action. Server error."
-                    )
-                } else {
-                    this.actions_data = r.data
-                    try {
-                        this.last_result = r.data.result_data.data.arr
-                    } catch (err) {
-                        console.log(
-                            "can't parse result data for actions: ",
-                            r.data
-                        )
-                    }
-                    console.log("last_result: ", this.last_result)
-                    this.makeToast(
-                        "success",
-                        "Completed. Check result on results tab."
-                    )
-                    await this.refresh()
-                }
             } catch (error) {
                 let msg = "Error loading actions. ERROR: " + error
                 console.error(msg, error.stack)
-                this.makeToast("danger", "Can't load actions")
+                //this.makeToast("danger", "Can't load actions")
             }
         },
     },

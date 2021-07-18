@@ -5,6 +5,11 @@ const DashboardLayout = () => import("../containers/DashboardLayout.vue")
 
 const LinkedinGeneral = () => import("../views/Linkedin/General.vue")
 const LinkedinSearchSN = () => import("../views/Linkedin/Search_sn.vue")
+const LinkedinSearchSscribeSN = () =>
+    import("../views/Linkedin/Search_scribe_sn.vue")
+const LinkedinSearch = () => import("../views/Linkedin/Search.vue")
+const LinkedinSearchSscribe = () =>
+    import("../views/Linkedin/Search_scribe.vue")
 
 const Profile = () => import("../views/Profile.vue")
 const Accounts = () => import("../views/Accounts.vue")
@@ -27,6 +32,21 @@ const routes = [
                 path: "/linkedin/sn/search",
                 name: "Linkedin search SN",
                 component: LinkedinSearchSN,
+            },
+            {
+                path: "/linkedin/sn/search/scribe",
+                name: "Linkedin search scribe SN",
+                component: LinkedinSearchSscribeSN,
+            },
+            {
+                path: "/linkedin/search",
+                name: "Linkedin search",
+                component: LinkedinSearch,
+            },
+            {
+                path: "/linkedin/search/scribe",
+                name: "Linkedin search scribe",
+                component: LinkedinSearchSscribe,
             },
             {
                 path: "/profile",
