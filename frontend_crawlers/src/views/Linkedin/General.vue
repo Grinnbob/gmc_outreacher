@@ -16,11 +16,12 @@
                     <div class="col d-flex align-self-center">
                         <b-list-group>
                             <b-list-group-item href="/linkedin/profile"
-                                >Get profile info</b-list-group-item
+                                >Get profile info (comming
+                                soon)</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/sn/profile"
-                                >Get Sales Navigator profile
-                                info</b-list-group-item
+                                >Get Sales Navigator profile info (comming
+                                soon)</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/search"
                                 >Search</b-list-group-item
@@ -35,8 +36,8 @@
                                 >Search SN detailed</b-list-group-item
                             >
                             <b-list-group-item href="/linkedin/post"
-                                >Get info from post - likes, comments,
-                                etc</b-list-group-item
+                                >Get info from post - likes, comments, etc
+                                (comming soon)</b-list-group-item
                             >
                         </b-list-group>
                     </div>

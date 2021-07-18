@@ -103,7 +103,7 @@
                                 {{
                                     actions_data &&
                                     Object.keys(actions_data).length > 0
-                                        ? actions_data.started_at
+                                        ? new Date(actions_data.started_at)
                                         : "-"
                                 }}
                             </p>

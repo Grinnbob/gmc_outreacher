@@ -105,7 +105,7 @@
                                 {{
                                     actions_data &&
                                     Object.keys(actions_data).length > 0
-                                        ? actions_data.started_at
+                                        ? new Date(actions_data.started_at)
                                         : "-"
                                 }}
                             </p>
@@ -307,6 +307,7 @@ export default {
             this.loaded = true
         },
         formatResult() {
+            // replace arrays with strings
             if (!this.last_result || this.last_result.length < 1) return
 
             this.last_result = this.last_result.map((row) => {
