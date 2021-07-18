@@ -1,13 +1,12 @@
-const puppeteer = require("puppeteer");
-const LoginAction = require('./loginAction.js');
-const links = require("../links");
-const selectors = require("../selectors");
-const models = require("../../models/models.js");
+const puppeteer = require("puppeteer")
+const LoginAction = require("./loginAction.js")
+const links = require("../links")
+const selectors = require("../selectors")
+const models = require("../../models/models.js")
 
-var log = require('loglevel').getLogger("o24_logger");
+var log = require("loglevel").getLogger("o24_logger")
 
-const MyExceptions = require('../../exceptions/exceptions.js');
-
+const MyExceptions = require("../../exceptions/exceptions.js")
 
 async function get_current_cookie(page) {
     // Get Session Cookies
@@ -21,50 +20,59 @@ async function get_current_cookie(page) {
     return newCookies
 }
 
-
 async function update_cookie(page, credentials_id) {
     const new_cookies = await get_current_cookie(page)
 
     let new_expires = 0
-    for(let item of new_cookies) {
-        if (item.name === 'li_at') {
+    for (let item of new_cookies) {
+        if (item.name === "li_at") {
             new_expires = item.expires
             break
         }
     }
 
-    const account = await models.Accounts.findOneAndUpdate({ _id: credentials_id }, { expires: new_expires, cookies: new_cookies }, { upsert: false }, function (err, res) {
-        if (err) throw MyExceptions.MongoDBError('MongoDB find Account err: ' + err)
-    })
+    const account = await models.Accounts.findOneAndUpdate(
+        { _id: credentials_id },
+        { expires: new_expires, cookies: new_cookies },
+        { upsert: false },
+        function (err, res) {
+            if (err)
+                throw MyExceptions.MongoDBError(
+                    "MongoDB find Account err: " + err
+                )
+        }
+    )
 
-    if(account == null) {
-        throw new Error("utils: Account with credentials_id: " + credentials_id + " not exists.")
+    if (account == null) {
+        throw new Error(
+            "utils: Account with credentials_id: " +
+                credentials_id +
+                " not exists."
+        )
     }
 
     log.debug("utils: Cookies updated.")
 }
 
-
 function check_block(url) {
     if (!url) {
-        throw new Error('Empty url in check_block.')
+        throw new Error("Empty url in check_block.")
     }
 
-    return ((url.includes(links.BAN_LINK) || url.includes(links.CHALLENGE_LINK)) ? true : false)
+    return url.includes(links.BAN_LINK) || url.includes(links.CHALLENGE_LINK)
+        ? true
+        : false
 }
-
 
 async function check_success_selector(selector, page) {
     if (!selector) {
-        throw new Error('Empty selector.')
+        throw new Error("Empty selector.")
     }
 
     try {
         await page.waitForSelector(selector, { timeout: 5000 })
         return true
-
     } catch (err) {
-
         if (this.check_block(page.url())) {
             throw MyExceptions.ContextError("Block happend: " + page.url())
         }
@@ -73,10 +81,9 @@ async function check_success_selector(selector, page) {
     }
 }
 
-
 async function check_success_page(required_url, page) {
     if (!required_url) {
-        throw new Error('Empty required_url.')
+        throw new Error("Empty required_url.")
     }
 
     let current_url = page.url()
@@ -90,19 +97,20 @@ async function check_success_page(required_url, page) {
     }
 
     // uncknown page here
-    throw new Error('Uncknowm page here: ', current_url)
+    throw new Error("Uncknowm page here: ", current_url)
     //return false
 }
 
-
 async function close_msg_box(page) {
     if (page == null) {
-        throw new Error('Page not found.')
+        throw new Error("Page not found.")
     }
     try {
         // close messages box !!! (XZ ETOT LINKED)
         await page.waitFor(10000) // wait linkedIn loading process
-        await page.waitForSelector(selectors.CLOSE_MSG_BOX_SELECTOR, { timeout: 5000 })
+        await page.waitForSelector(selectors.CLOSE_MSG_BOX_SELECTOR, {
+            timeout: 5000,
+        })
         await page.click(selectors.CLOSE_MSG_BOX_SELECTOR)
         await page.waitFor(2000) // wait linkedIn loading process
     } catch (err) {
@@ -110,12 +118,11 @@ async function close_msg_box(page) {
     }
 }
 
-
 // format message with data templates
 function formatMessage(message, data) {
-    if (message == null || message == '') {
+    if (message == null || message == "") {
         log.debug("action.formatMessage: Empty message.")
-        return ''
+        return ""
     }
 
     if (data == null) {
@@ -124,17 +131,16 @@ function formatMessage(message, data) {
 
     let str = message
     for (var obj in data) {
-        str = str.replace(new RegExp('{' + obj + '}', 'g'), data[obj])
+        str = str.replace(new RegExp("{" + obj + "}", "g"), data[obj])
     }
 
-    str = str.replace(new RegExp('\{(.*?)\}', 'g'), '')
+    str = str.replace(new RegExp("{(.*?)}", "g"), "")
     return str
 }
 
-
 // cut pathname in url
 function get_pathname_url(url) {
-    if (!url || !url.includes('linkedin')) {
+    if (!url || !url.includes("linkedin")) {
         log.error("utils get_pathname_url incorrect url format:", url)
         return url
     }
@@ -145,10 +151,9 @@ function get_pathname_url(url) {
     return pathname
 }
 
-
 // cut search in url
 function get_search_url(url) {
-    if (!url || !url.includes('linkedin')) {
+    if (!url || !url.includes("linkedin")) {
         log.error("utils get_search_url incorrect url format:", url)
         return url
     }
@@ -159,10 +164,9 @@ function get_search_url(url) {
     return search
 }
 
-
 // cut hostname in url
 function get_hostname_url(url) {
-    if (!url || !url.includes('linkedin')) {
+    if (!url || !url.includes("linkedin")) {
         log.error("utils get_hostname_url incorrect url format:", url)
         return url
     }
@@ -173,27 +177,26 @@ function get_hostname_url(url) {
     return hostname
 }
 
-
 // do 1 try to goto URL or goto login
 async function gotoChecker(context, page, credentials_id, url) {
     //log.debug('gotoChecker - url: ', url)
     if (!context) {
-        throw new Error('gotoChecker - Empty context.')
+        throw new Error("gotoChecker - Empty context.")
     }
     if (!page) {
-        throw new Error('gotoChecker - Empty page.')
+        throw new Error("gotoChecker - Empty page.")
     }
     if (!credentials_id) {
-        throw new Error('gotoChecker - Empty credentials_id.')
+        throw new Error("gotoChecker - Empty credentials_id.")
     }
     if (!url) {
-        throw new Error('gotoChecker - Empty url.')
+        throw new Error("gotoChecker - Empty url.")
     }
     try {
         await page.goto(url, {
-            waitUntil: 'load',
+            waitUntil: "load",
             //waitUntil: 'domcontentloaded',
-            timeout: 30000 // it may load too long! critical here
+            timeout: 30000, // it may load too long! critical here
         })
 
         await page.waitFor(7000) // puppeteer wait loading..
@@ -203,8 +206,11 @@ async function gotoChecker(context, page, credentials_id, url) {
         let short_url = get_pathname_url(url)
 
         if (!current_url.includes(short_url)) {
-            if (current_url.includes('login') || current_url.includes('signup') || current_url.includes("authwall")) {
-
+            if (
+                current_url.includes("login") ||
+                current_url.includes("signup") ||
+                current_url.includes("authwall")
+            ) {
                 let loginAction = new LoginAction.LoginAction(credentials_id)
                 await loginAction.setContext(context)
 
@@ -213,60 +219,85 @@ async function gotoChecker(context, page, credentials_id, url) {
                     await page.goto(url)
                 }
             } else {
-                log.error('gotoChecker - current url: ', current_url)
-                log.error('gotoChecker - required url: ', url)
-                throw new Error("gotoChecker - We cann't go to page, we got: " + current_url)
+                log.error("gotoChecker - current url: ", current_url)
+                log.error("gotoChecker - required url: ", url)
+                throw new Error(
+                    "gotoChecker - We cann't go to page, we got: " + current_url
+                )
             }
         }
     } catch (err) {
-        log.error('gotoChecker - current page: ', page.url())
-        log.error('gotoChecker - error: ', err.stack)
+        log.error("gotoChecker - current page: ", page.url())
+        log.error("gotoChecker - error: ", err.stack)
 
         if (this.check_block(page.url())) {
-            throw MyExceptions.ContextError("Block happend.");
+            throw MyExceptions.ContextError("Block happend.")
         }
 
-        throw new Error('gotoChecker error: ', err);
+        throw new Error("gotoChecker error: ", err)
     }
 }
 
-
 // get new page after click link
-async function clickAndWaitForTarget (clickSelector, page, browser) {
-    const pageTarget = page.target(); //save this to know that this was the opener
-    await page.click(clickSelector); //click on a link
-    const newTarget = await browser.waitForTarget(target => target.opener() === pageTarget); //check that you opened this page, rather than just checking the url
-    const newPage = await newTarget.page(); //get the page object
+async function clickAndWaitForTarget(clickSelector, page, browser) {
+    const pageTarget = page.target() //save this to know that this was the opener
+    await page.click(clickSelector) //click on a link
+    const newTarget = await browser.waitForTarget(
+        (target) => target.opener() === pageTarget
+    ) //check that you opened this page, rather than just checking the url
+    const newPage = await newTarget.page() //get the page object
     // await newPage.once("load",()=>{}); //this doesn't work; wait till page is loaded
-    await newPage.waitForSelector("body"); //wait for page to be loaded
-  
-    return newPage;
-  }
+    await newPage.waitForSelector("body") //wait for page to be loaded
 
+    return newPage
+}
+
+function replaceUrlParam(url, paramName, paramValue) {
+    if (paramValue == null) {
+        paramValue = ""
+    }
+    var pattern = new RegExp("\\b(" + paramName + "=).*?(&|#|$)")
+    if (url.search(pattern) >= 0) {
+        return url.replace(pattern, "$1" + paramValue + "$2")
+    }
+    url = url.replace(/[?#]$/, "")
+    return (
+        url + (url.indexOf("?") > 0 ? "&" : "?") + paramName + "=" + paramValue
+    )
+}
+
+function getNextPageURL(url) {
+    let new_url = url
+    let current_page = new URLSearchParams(url).get("page")
+    let next_page = current_page ? parseInt(current_page, 10) + 1 : 2
+
+    new_url = replaceUrlParam(url, "page", next_page)
+    log.debug("Next page url: ", new_url)
+    return new_url
+}
 
 async function autoScroll(page) {
     await page.evaluate(async () => {
-      await new Promise((resolve, reject) => {
-        var totalHeight = 0
-        var distance = 100
+        await new Promise((resolve, reject) => {
+            var totalHeight = 0
+            var distance = 100
 
-        var timer = setInterval(() => {
-          var scrollHeight = document.body.scrollHeight
-          window.scrollBy(0, distance)
-          totalHeight += distance
+            var timer = setInterval(() => {
+                var scrollHeight = document.body.scrollHeight
+                window.scrollBy(0, distance)
+                totalHeight += distance
 
-          if (totalHeight >= scrollHeight) {
-            clearInterval(timer)
-            resolve()
-          }
-        }, 100)
-      })
+                if (totalHeight >= scrollHeight) {
+                    clearInterval(timer)
+                    resolve()
+                }
+            }, 100)
+        })
     })
-  }
-
+}
 
 async function autoScroll_modal(page, element_class) {
-    if(element_class == null) {
+    if (element_class == null) {
         return
     }
     await page.evaluate(async (element_class) => {
@@ -289,7 +320,6 @@ async function autoScroll_modal(page, element_class) {
     }, element_class)
 }
 
-
 module.exports = {
     clickAndWaitForTarget: clickAndWaitForTarget,
     autoScroll: autoScroll,
@@ -305,4 +335,5 @@ module.exports = {
     check_block: check_block,
     update_cookie: update_cookie,
     get_current_cookie: get_current_cookie,
+    getNextPageURL,
 }
