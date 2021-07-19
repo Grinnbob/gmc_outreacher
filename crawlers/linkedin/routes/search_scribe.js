@@ -164,22 +164,24 @@ router.post("/search/scribe", async (req, res) => {
     let action = null
 
     let browser = null
+
+    if( !task.input_data ) return res.status(403).send("Wrong input data format.").end()
+    if( !task.credentials_id ) return res.status(403).send("Wrong input data format.").end()
+
     try {
         credentials_id = task.credentials_id
-        if (!credentials_id) {
-            throw new Error("there is no task.credentials_id")
-        }
         let input_data = task.input_data
-        if (!input_data) {
-            throw new Error("there is no task.input_data")
-        }
         let task_data = utils.serialize_data(input_data)
+
+        if( !task_data.campaign_data ) return res.status(403).send("Wrong input data format.").end()
+        if( !task_data.campaign_data.search_url ) return res.status(403).send("Wrong input data format.").end()
+        if( !task_data.campaign_data.interval_pages ) return res.status(403).send("Wrong input data format.").end()
 
         try {
             // create action
             action = await models.Actions.create({
                 action: action_codes.linkedin_search_scribe,
-                user_id: task.user._id,
+                user_id: task.userId,
                 started_at: Date.now(),
                 status: 0,
                 ack: 1,
@@ -188,7 +190,7 @@ router.post("/search/scribe", async (req, res) => {
             })
         } catch (err) {
             throw new Error(
-                `Can't save action for ${action_codes.linkedin_search_scribe} for user ${task.user._id}: ${err}`
+                `Can't save action for ${action_codes.linkedin_search_scribe} for user ${task.userId}: ${err}`
             )
         }
 

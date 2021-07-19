@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken")
 // todo https://habr.com/ru/company/ruvds/blog/457700/
 function generateToken(user) {
     const data = {
-        _id: user._id,
+        _id: userId,
         name: user.name,
         login: user.login,
     }

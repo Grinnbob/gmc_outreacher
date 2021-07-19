@@ -12,21 +12,6 @@ const status_codes = require("../status_codes")
  *   post:
  *     summary: Get all your Linkedin accounts.
  *     description: Get all your Linkedin accounts.
- *     requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          login:
- *                              type: string
- *                              description: service login
- *                              example: servicelogin@gsuit.com
- *                          password:
- *                              type: string
- *                              description: service password
- *                              example: mypass1234
  *     responses:
  *       200:
  *         description: Account
@@ -51,12 +36,12 @@ const status_codes = require("../status_codes")
  *                          description: credentials_id for next requests
  *                          example: 1589
  */
-router.post("/accounts", async (req, res) => {
+router.get("/accounts", async (req, res) => {
     let result_data = {}
     let task = req.body
 
     try {
-        let accounts = await models.Accounts.find({ user_id: task.user._id })
+        let accounts = await models.Accounts.find({ user_id: task.userId })
 
         console.log("... accounts: ... ", accounts)
 

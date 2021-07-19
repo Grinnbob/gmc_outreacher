@@ -1,53 +1,19 @@
 const router = require("express").Router()
+const Bcrypt = require('bcryptjs')
 
 const models = require("../../models/models.js")
-
-const MyExceptions = require("../../exceptions/exceptions.js")
 var log = require("loglevel").getLogger("o24_logger")
 
 const status_codes = require("../status_codes")
+const BCRYPT_ROUNDS = 10
 
-/**
- * @swagger
- * /user/create:
- *   post:
- *     summary: Create user.
- *     description: Create user.
- *     requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          login:
- *                              type: string
- *                              description: service login
- *                              example: servicelogin@gsuit.com
- *                          password:
- *                              type: string
- *                              description: service password
- *                              example: mypass1234
- *     responses:
- *       200:
- *         description: user
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   description: status code
- *                   example: 0
- *                 if_true:
- *                   type: boolean
- *                   description: some expression
- *                   example: false
- */
+
 router.post("/user/create", async (req, res) => {
     let result_data = {}
     let task = req.body
+
+    if( !task.login ) return res.status(403).send("Wrong input data format.").end()
+    if( !task.password ) return res.status(403).send("Wrong input data format.").end()
 
     try {
         let user = await models.Users.findOne({ login: task.login })
@@ -64,7 +30,7 @@ router.post("/user/create", async (req, res) => {
             // create user
             user = await models.Users.create({
                 login: task.login,
-                password: task.password,
+                password: Bcrypt.hashSync(task.password, BCRYPT_ROUNDS)
             })
 
             console.log("... user created: ...", user)

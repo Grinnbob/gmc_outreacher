@@ -67,6 +67,10 @@ let userSchema = new Schema({
         default: null,
     },
 
+    tokenExpiresAt: {
+        type: Number,
+    },
+
     role: {
         type: Number,
         default: 1, // 1 = user, 2 = api user, 3 = admin

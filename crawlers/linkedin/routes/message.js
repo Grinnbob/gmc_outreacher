@@ -96,7 +96,7 @@ router.post("/message", async (req, res) => {
             // create action
             action = await models.Actions.create({
                 action: action_codes.linkedin_send_message,
-                user_id: task.user._id,
+                user_id: task.userId,
                 started_at: Date.now(),
                 status: 0,
                 ack: 1,
@@ -105,7 +105,7 @@ router.post("/message", async (req, res) => {
             })
         } catch (err) {
             throw new Error(
-                `Can't save action for ${action_codes.linkedin_send_message} for user ${task.user._id}: ${err}`
+                `Can't save action for ${action_codes.linkedin_send_message} for user ${task.userId}: ${err}`
             )
         }
 

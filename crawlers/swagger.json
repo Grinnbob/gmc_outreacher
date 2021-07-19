@@ -1,0 +1,444 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Linkedin parser API",
+      "version": "0.0.1",
+      "description": "Linkedin parser API"
+    },
+  
+    "paths": {
+
+      "/auth": {
+        "post": {
+          "summary": "Получить токен",
+          "parameters": [
+            {
+                "name": "body",
+                "in": "body",
+                "description": "body",
+                "type": "object",
+                "example": {
+                    "login": "servicelogin@gsuit.com",
+                    "password": "mypass1234"
+                }
+              }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok!",
+              "examples": {
+                "application/json": "{\"id\":3,\"userId\":1,\"accessToken\":\"f911e1943d0cee230ca04b934e036ab8\",\"expiresAt\":\"2021-02-25T09:06:30.906Z\",\"updatedAt\":\"2021-02-24T09:06:30.908Z\",\"createdAt\":\"2021-02-24T09:06:30.908Z\"}"
+              }
+            },
+            "403": {
+              "description": "Не передана часть параметров",
+              "examples": {
+                "application/json": "Login must be defined"
+              }
+            },
+            "401": {
+              "description": "Неверный логин или пароль",
+              "examples": {
+                "application/json": "Invalid password"
+              }
+            }
+          }
+        }
+      },
+
+      "/user/create": {
+        "post": {
+          "summary": "Create user.",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "type": "object",
+              "example": {
+                  "login": "servicelogin@gsuit.com",
+                  "password": "mypass1234"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/account": {
+        "post": {
+          "summary": "Add Linkedin account.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "type": "object",
+              "required": true,
+              "example": {
+                  "input_data": {
+                    "login": "linkedinlogin@gmail.com",
+                    "li_at": "A12edwadcwe4rfwecfrtg45gre",
+                    "password": "mypass1234"
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/accounts": {
+        "get": {
+          "summary": "Get all your Linkedin accounts.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/actions": {
+        "post": {
+          "summary": "Get all actions.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "type": "object",
+              "example": {
+                  "input_data": {
+                      "action": 4
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/action": {
+        "post": {
+          "summary": "Get last action.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "type": "object",
+              "example": {
+                  "input_data": {
+                      "action": 4
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/search": {
+        "post": {
+          "summary": "Scribe from Linkedin search.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "required": true,
+              "type": "object",
+              "example": {
+                  "credentials_id": "123",
+                  "input_data": {
+                      "campaign_data": {
+                          "search_url": "www.linkedin.com/user/search=marketers",
+                          "interval_pages": 10
+                      }
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/search/scribe": {
+        "post": {
+          "summary": "Scribe from Linkedin search EACH profile.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "required": true,
+              "type": "object",
+              "example": {
+                  "credentials_id": "123",
+                  "input_data": {
+                      "campaign_data": {
+                          "search_url": "www.linkedin.com/user/search=marketers",
+                          "interval_pages": 10
+                      }
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      }, 
+
+      "/sn/search": {
+        "post": {
+          "summary": "Scribe from Linkedin Sales Navigator search.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "required": true,
+              "type": "object",
+              "example": {
+                  "credentials_id": "123",
+                  "input_data": {
+                      "campaign_data": {
+                          "search_url": "www.linkedin.com/user/search=marketers",
+                          "interval_pages": 10
+                      }
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/sn/search/scribe": {
+        "post": {
+          "summary": "Scribe from Linkedin Sales Navigator search EACH profile.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "required": true,
+              "type": "object",
+              "example": {
+                  "credentials_id": "123",
+                  "input_data": {
+                      "campaign_data": {
+                          "search_url": "www.linkedin.com/user/search=marketers",
+                          "interval_pages": 10
+                      }
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      }, 
+
+      "/scribe": {
+        "post": {
+          "summary": "Scribe Linkedin member page.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "required": true,
+              "type": "object",
+              "example": {
+                  "credentials_id": "123",
+                  "input_data": {
+                      "prospect_data": {
+                          "linkedin": "www.linkedin.com/user/"
+                      }
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      },
+
+      "/sn/scribe": {
+        "post": {
+          "summary": "Scribe Linkedin Sales Navigator member page.",
+          "parameters": [
+            {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Auth token",
+                "required": true,
+                "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "body",
+              "required": true,
+              "type": "object",
+              "example": {
+                  "credentials_id": "123",
+                  "input_data": {
+                      "prospect_data": {
+                          "linkedin": "www.linkedin.com/user/"
+                      }
+                  }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "examples": {
+                "application/json": "{}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "consumes": [
+      "application/json"
+    ]
+  }  

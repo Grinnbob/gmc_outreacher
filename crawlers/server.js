@@ -2,70 +2,27 @@ const express = require("express")
 const fs = require("fs")
 //const mongoose = require("mongoose")
 const config = require("./config")
-//const routes = require("./linkedin/routes/*.js")
 const models = require("./models/models.js")
 const swaggerUi = require("swagger-ui-express")
-const swaggerJSDoc = require("swagger-jsdoc")
+const swaggerDocument = require('./swagger.json')
+const authMiddleware = require('./middleware/auth')
 
 const routes_path = "./linkedin/routes/"
-
-const swaggerDefinition = {
-    openapi: "3.0.0",
-    info: {
-        title: "Linkedin API pasrer",
-        version: "1.0.0",
-    },
-}
-
-const options = {
-    swaggerDefinition,
-    // Paths to files containing OpenAPI definitions
-    apis: ["./linkedin/routes/*.js"],
-}
-
-const swaggerSpec = swaggerJSDoc(options)
 
 var log = require("loglevel").getLogger("o24_logger")
 
 const app = express()
 
-// auth
-// const session = require("express-session")
-// const passport = require("passport")
-// const localStrategy = require("passport-local").Strategy
-// const flash = require("connect-flash")
-
-// passport.serializeUser((user, done) => done(null, user))
-// passport.deserializeUser((user, done) => done(null, user))
 
 app.use(express.json())
 //app.use(express.urlencoded())
 app.use(express.urlencoded({ extended: true }))
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)) // swagger
-
-// auth
-// app.use(session({ secret: "Linkedin_API_secret_8" }))
-// app.use(flash())
-//app.use(passport.initialize())
-//app.use(passport.session())
-app.use(async (req, res, next) => {
-    if (req.body.login && req.body.password) {
-        req.body.user = await models.Users.findOne({ login: req.body.login })
-
-        if (req.body.user == null) return next("User not found")
-        else if (req.body.password !== req.body.user.password)
-            return next("Wrong password")
-
-        log.debug("User checked")
-        console.log('body:', req.body)
-        next()
-    } else {
-        //log.error("Auth error - empty login / password in request")
-        console.log('body:', req.body)
-        next("Auth error - empty login / password in request")
-    }
-})
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument)
+)
 
 // check credentials
 app.use(async (req, res, next) => {
@@ -95,23 +52,6 @@ app.use(async (req, res, next) => {
 //     console.log('migrated: ', actions.length)
 // })
 
-// passport.use(
-//     new localStrategy(async (login, password, done) => {
-//         let user = await models.Users.findOne({ login: login })
-
-//         if (user == null)
-//             return done(null, false, {
-//                 message: "User not found",
-//             })
-//         else if (password !== user.password)
-//             return done(null, false, {
-//                 message: "Wrong password",
-//             })
-
-//         return done(null, user)
-//     })
-// )
-
 // Add headers
 // app.use(function (req, res, next) {
 //     res.setHeader("Access-Control-Allow-Origin", "*")
@@ -126,6 +66,17 @@ app.use(async (req, res, next) => {
 //     //Pass to next layer of middleware
 //     next()
 // })
+
+
+var checkUserFilter = async function(req, res, next) {
+    if(req._parsedUrl.pathname === '/user/create' || req._parsedUrl.pathname === '/auth') {
+        next()
+    } else {
+        await authMiddleware(req, res, next)
+    }
+}
+
+app.use(checkUserFilter);
 
 fs.readdirSync(routes_path).forEach(function (file) {
     app.use(require(routes_path + file))

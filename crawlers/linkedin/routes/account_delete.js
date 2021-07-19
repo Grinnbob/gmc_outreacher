@@ -67,7 +67,7 @@ router.post("/account/delete", async (req, res) => {
         let account = await models.Accounts.findOneAndUpdate({
             //_id: task.credentials_id,
             login: input_data.login,
-            user_id: task.user._id,
+            user_id: task.userId,
         }, {
             status: -1
         })

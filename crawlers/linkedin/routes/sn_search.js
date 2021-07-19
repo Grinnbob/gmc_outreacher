@@ -125,7 +125,7 @@ router.post("/sn/search", async (req, res) => {
             // create action
             action = await models.Actions.create({
                 action: action_codes.linkedin_search_sn,
-                user_id: task.user._id,
+                user_id: task.userId,
                 started_at: Date.now(),
                 status: 0,
                 ack: 1,
@@ -134,7 +134,7 @@ router.post("/sn/search", async (req, res) => {
             })
         } catch (err) {
             throw new Error(
-                `Can't save action for ${action_codes.linkedin_search_sn} for user ${task.user._id}: ${err}`
+                `Can't save action for ${action_codes.linkedin_search_sn} for user ${task.userId}: ${err}`
             )
         }
 

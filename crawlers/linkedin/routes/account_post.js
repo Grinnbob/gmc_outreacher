@@ -6,42 +6,7 @@ var log = require("loglevel").getLogger("o24_logger")
 
 const status_codes = require("../status_codes")
 
-/**
- * @swagger
- * /account:
- *   post:
- *     summary: Add Linkedin account.
- *     description: Add Linkedin account.
- *     requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          login:
- *                              type: string
- *                              description: service login
- *                              example: servicelogin@gsuit.com
- *                          password:
- *                              type: string
- *                              description: service password
- *                              example: mypass1234
- *                          input_data:
- *                              type: object
- *                              properties:
- *                                  li_at:
- *                                    type: string
- *                                    description: Linkedin li_at cookie
- *                                    example: "A12edwadcwe4rfwecfrtg45gre"
- *                                  login:
- *                                    type: string
- *                                    description: Linkedin login
- *                                    example: linkedinlogin@gmail.com
- *                                  password:
- *                                    type: string
- *                                    description: Linkedin password
- *                                    example: mypass1234
+/*
  *     responses:
  *       200:
  *         description: Account
@@ -70,19 +35,17 @@ router.post("/account", async (req, res) => {
     let result_data = {}
     let task = req.body
 
+    if( !task.input_data ) return res.status(403).send("Wrong input data format - empty input_data.").end()
+    let input_data = task.input_data
+    if( !input_data.login ) return res.status(403).send("Wrong input data format - login required.").end()
+    if( !input_data.password && !input_data.li_at ) return res.status(403).send("Wrong input data format - li_at or password required.").end()
+
     try {
-        let input_data = task.input_data
-        if (!input_data) {
-            throw new Error("there is no task.input_data")
-        }
-
-        if(!input_data.login && !input_data.password && !input_data.li_at) throw new Error("Empty user data")
-
         // create account
         let account = await models.Accounts.create({
             login: input_data.login,
             password: input_data.password,
-            user_id: task.user._id,
+            user_id: task.userId,
             cookies: input_data.li_at
                 ? [
                       {
