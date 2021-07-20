@@ -53,19 +53,19 @@ app.use(async (req, res, next) => {
 // })
 
 // Add headers
-// app.use(function (req, res, next) {
-//     res.setHeader("Access-Control-Allow-Origin", "*")
-//     res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
-//     res.setHeader(
-//         "Access-Control-Allow-Headers",
-//         "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//     )
+//app.use(function (req, res, next) {
+    // res.setHeader("Access-Control-Allow-Origin", "*")
+    // res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
+    // res.setHeader(
+    //     "Access-Control-Allow-Headers",
+    //     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    // )
 
-//     res.setHeader('Access-Control-Allow-Credentials', true)
+    //res.setHeader('Access-Control-Allow-Credentials', true)
 
-//     //Pass to next layer of middleware
-//     next()
-// })
+    // // Pass to next layer of middleware
+    //next()
+//})
 
 
 var checkUserFilter = async function(req, res, next) {
@@ -76,7 +76,7 @@ var checkUserFilter = async function(req, res, next) {
     }
 }
 
-app.use(checkUserFilter);
+app.use(checkUserFilter)
 
 fs.readdirSync(routes_path).forEach(function (file) {
     app.use(require(routes_path + file))

@@ -58,8 +58,18 @@ router.post("/auth", async (req, res) => {
             tokenExpiresAt: (Date.now() + (DAYS_EXPIRES * 24 * 60 * 60 * 1000)) // DAYS_EXPIRES mode
         })
 
-        log.debug("accessToken: ", accessToken)
-        return res.json(accessToken)
+        let result_data = {
+            code: 0,
+            data: {
+                token: accessToken,
+                _id: user._id,
+                login: user.login
+            }
+        }
+
+        log.debug("result: ", result_data)
+        
+        return res.json(result_data)
         
     } catch (err) {
         log.error("auth user error:", err.stack)
