@@ -57,14 +57,10 @@ router.post("/action", async (req, res) => {
         if (task.input_data && task.input_data.action) actions = await models.Actions.find({ user_id: task.userId, action: task.input_data.action }).sort('-started_at')
         else actions = await models.Actions.find({ user_id: task.userId }).sort('-started_at')
 
-        action = actions[actions.length - 1]
-
-        console.log("... action: ... ", action)
-
         result_data = {
             code: 0,
             if_true: true,
-            data: action,
+            data: actions[actions.length - 1],
         }
     } catch (err) {
         log.error("Get action error:", err.stack)

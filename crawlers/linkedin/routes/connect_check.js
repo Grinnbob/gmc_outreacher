@@ -70,16 +70,17 @@ router.post("/connect/check", async (req, res) => {
     let action = null
 
     let browser = null
+
+    if( !task.input_data ) return res.status(400).send("Wrong input data format - empty input_data.").end()
+    if( !task.credentials_id ) return res.status(400).send("Wrong input data format - empty credentials_id.").end()
+
     try {
         credentials_id = task.credentials_id
-        if (!credentials_id) {
-            throw new Error("there is no task.credentials_id")
-        }
         let input_data = task.input_data
-        if (!input_data) {
-            throw new Error("there is no task.input_data")
-        }
         let task_data = utils.serialize_data(input_data)
+
+        if( !task.prospect_data ) return res.status(400).send("Wrong input data format - empty prospect_data.").end()
+        if( !task.prospect_data.linkedin ) return res.status(400).send("Wrong input data format - empty linkedin.").end()
 
         try {
             // create action

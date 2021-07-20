@@ -70,6 +70,10 @@ router.post("/profile/visit", async (req, res) => {
     let action = null
 
     let browser = null
+
+    if( !task.input_data ) return res.status(400).send("Wrong input data format - empty input_data.").end()
+    if( !task.credentials_id ) return res.status(400).send("Wrong input data format - empty credentials_id.").end()
+    
     try {
         credentials_id = task.credentials_id
         if (!credentials_id) {

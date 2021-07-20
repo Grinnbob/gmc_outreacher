@@ -42,8 +42,8 @@ router.post("/auth", async (req, res) => {
     let accessToken
     let task = req.body
 
-    if (!task.login) return res.status(403).send('Login must be defined')
-    if (!task.password) return res.status(403).send('Password must be defined')
+    if (!task.login) return res.status(400).send('Login must be defined')
+    if (!task.password) return res.status(400).send('Password must be defined')
 
     try {
         let user = await models.Users.findOne({ login: task.login })

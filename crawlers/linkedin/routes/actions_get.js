@@ -15,8 +15,6 @@ router.post("/actions", async (req, res) => {
         if (task.input_data && task.input_data.action) actions = await models.Actions.find({ user_id: task.userId, action: task.input_data.action }).sort('-started_at')
         else actions = await models.Actions.find({ user_id: task.userId }).sort('-started_at')
 
-        console.log("... actions found: ... ", actions.length)
-
         result_data = {
             code: 0,
             if_true: true,

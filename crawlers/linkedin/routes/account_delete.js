@@ -55,14 +55,11 @@ router.post("/account/delete", async (req, res) => {
     let result_data = {}
     let task = req.body
 
+    if( !task.input_data ) return res.status(400).send("Wrong input data format - empty input_data.").end()
+    let input_data = task.input_data
+    if( !input_data.login ) return res.status(400).send("Wrong input data format - login required.").end()
+
     try {
-        let input_data = task.input_data
-        if (!input_data) {
-            throw new Error("there is no task.input_data")
-        }
-
-        if(!input_data.login) throw new Error("Empty account login")
-
         // deactivate account
         let account = await models.Accounts.findOneAndUpdate({
             //_id: task.credentials_id,

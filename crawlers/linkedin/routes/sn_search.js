@@ -110,16 +110,18 @@ router.post("/sn/search", async (req, res) => {
     let action = null
 
     let browser = null
+
+    if( !task.input_data ) return res.status(400).send("Wrong input data format - empty input_data.").end()
+    if( !task.credentials_id ) return res.status(400).send("Wrong input data format - empty credentials_id.").end()
+    
     try {
         credentials_id = task.credentials_id
-        if (!credentials_id) {
-            throw new Error("there is no task.credentials_id")
-        }
         let input_data = task.input_data
-        if (!input_data) {
-            throw new Error("there is no task.input_data")
-        }
         let task_data = utils.serialize_data(input_data)
+
+        if( !task_data.campaign_data ) return res.status(400).send("Wrong input data format.").end()
+        if( !task_data.campaign_data.search_url ) return res.status(400).send("Wrong input data format.").end()
+        if( !task_data.campaign_data.interval_pages ) return res.status(400).send("Wrong input data format.").end()
 
         try {
             // create action

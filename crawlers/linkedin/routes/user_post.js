@@ -12,8 +12,8 @@ router.post("/user/create", async (req, res) => {
     let result_data = {}
     let task = req.body
 
-    if( !task.login ) return res.status(403).send("Wrong input data format.").end()
-    if( !task.password ) return res.status(403).send("Wrong input data format.").end()
+    if( !task.login ) return res.status(400).send("Wrong input data format.").end()
+    if( !task.password ) return res.status(400).send("Wrong input data format.").end()
 
     try {
         let user = await models.Users.findOne({ login: task.login })

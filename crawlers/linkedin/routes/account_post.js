@@ -35,10 +35,10 @@ router.post("/account", async (req, res) => {
     let result_data = {}
     let task = req.body
 
-    if( !task.input_data ) return res.status(403).send("Wrong input data format - empty input_data.").end()
+    if( !task.input_data ) return res.status(400).send("Wrong input data format - empty input_data.").end()
     let input_data = task.input_data
-    if( !input_data.login ) return res.status(403).send("Wrong input data format - login required.").end()
-    if( !input_data.password && !input_data.li_at ) return res.status(403).send("Wrong input data format - li_at or password required.").end()
+    if( !input_data.login ) return res.status(400).send("Wrong input data format - login required.").end()
+    if( !input_data.password && !input_data.li_at ) return res.status(400).send("Wrong input data format - li_at or password required.").end()
 
     try {
         // create account
