@@ -38,9 +38,7 @@ router.post("/user/create", async (req, res) => {
             result_data = {
                 if_true: true,
                 code: 0,
-                data: {
-                    login: user.login,
-                },
+                data: user,
             }
         }
     } catch (err) {
