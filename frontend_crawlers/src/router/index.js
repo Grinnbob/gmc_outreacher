@@ -2,6 +2,10 @@ import Vue from "vue"
 import VueRouter from "vue-router"
 
 const DashboardLayout = () => import("../containers/DashboardLayout.vue")
+const AuthLayout = () => import("../views/Auth/AuthLayout.vue")
+
+const Login = () => import("../views/Auth/Login.vue")
+const Register = () => import("../views/Auth/Register.vue")
 
 const LinkedinGeneral = () => import("../views/Linkedin/General.vue")
 const LinkedinSearchSN = () => import("../views/Linkedin/Search_sn.vue")
@@ -18,6 +22,23 @@ const Actions = () => import("../views/Actions.vue")
 
 Vue.use(VueRouter)
 const routes = [
+    {
+        path: "/",
+        name: "Auth",
+        component: AuthLayout,
+        children: [
+            {
+                path: "/login",
+                name: "Login",
+                component: Login,
+            },
+            {
+                path: "/register",
+                name: "Register",
+                component: Register,
+            },
+        ],
+    },
     {
         path: "/",
         name: "Dashboard",

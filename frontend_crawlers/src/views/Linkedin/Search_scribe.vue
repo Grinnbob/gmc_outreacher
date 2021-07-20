@@ -231,7 +231,7 @@ export default {
         },
         async loadAccounts() {
             try {
-                let res = await axios.post(ACCOUNTS_API, {})
+                let res = await axios.get(ACCOUNTS_API)
                 let r = res.data
                 if (r.code < 0) {
                     console.log(r)

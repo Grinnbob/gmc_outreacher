@@ -5,20 +5,20 @@ const instance = axios.create({
     baseURL: process.env.VUE_APP_API_URL,
     headers: {
         "Content-Type": "application/json",
-        // Authorization: {
-        //     toString() {
-        //         return `Bearer ${localStorage.getItem("token")}`
-        //     },
-        // },
+        Authorization: {
+            toString() {
+                return `${localStorage.getItem("token")}`
+            },
+        },
     },
 })
 
 // todo remove it
-instance.interceptors.request.use(function(request) {
-    request.data.login = "servicelogin@gsuit.com"
-    request.data.password = "mypass1234"
-    return request
-})
+// instance.interceptors.request.use(function(request) {
+//     request.data.login = "servicelogin@gsuit.com"
+//     request.data.password = "mypass1234"
+//     return request
+// })
 
 instance.interceptors.response.use(
     function(response) {
@@ -28,7 +28,7 @@ instance.interceptors.response.use(
     function(error) {
         // Do something with response error
         let msg = error.toString()
-        if (msg.includes("403")) {
+        if (msg.includes("403") || msg.includes("401")) {
             //console.log('....', localStorage.getItem('token'))
 
             store
@@ -45,7 +45,7 @@ instance.interceptors.response.use(
                     console.error("login error: ", err)
                 })
             //router.push("login");
-            console.log(`Error: 403 here`)
+            console.log(`Error: Auth error here`)
         }
         return Promise.reject(error)
     }

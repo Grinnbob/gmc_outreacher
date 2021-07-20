@@ -1,12 +1,15 @@
 import axios from "axios"
 import router from "../../router/index"
 
-axios.create({
+const LOGIN_PATH = "/auth"
+const REGISTER_PATH = "/user/create"
+
+const axios_instance = axios.create({
     baseURL: process.env.VUE_APP_API_URL,
 })
 
 const state = {
-    email: null,
+    login: null,
     token: null,
     role: null,
     login_error: "",
@@ -15,7 +18,7 @@ const state = {
 
 const mutations = {
     auth_user(state, user_data) {
-        state.email = user_data.email
+        state.login = user_data.login
         state.token = user_data.token
         state.user_id = user_data.user_id
 
@@ -23,7 +26,7 @@ const mutations = {
         state.register_error = ""
     },
     clear_auth_data(state) {
-        state.email = null
+        state.login = null
         state.token = null
         state.user_id = null
 
@@ -55,24 +58,23 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit("clear_auth_data")
 
-            const login_path = "/sign_in"
-            var login_data = new FormData()
-            login_data.append("_auth_data", JSON.stringify(auth_data))
-
-            axios
-                .post(login_path, login_data)
+            axios_instance
+                .post(LOGIN_PATH, {
+                    login: auth_data.login,
+                    password: auth_data.password,
+                })
                 .then((response) => {
                     let r = response.data
 
-                    if (r.code == 1) {
+                    if (r.code == 0) {
                         commit("auth_user", {
-                            email: auth_data.email,
-                            token: r.token,
+                            login: auth_data.login,
+                            token: r.data.token,
                         })
-                        localStorage.setItem("token", r.token)
-                        localStorage.setItem("email", r.email)
-                        localStorage.setItem("role", r.role)
-                        localStorage.setItem("user_id", r.user_id)
+                        localStorage.setItem("token", r.data.token)
+                        localStorage.setItem("login", r.data.login)
+                        //localStorage.setItem("role", r.data.role)
+                        localStorage.setItem("user_id", r.data._id)
 
                         console.log("r: ", r)
                         resolve(r)
@@ -91,24 +93,23 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit("clear_auth_data")
 
-            const register_path = "/sign_up"
-            var register_data = new FormData()
-            register_data.append("_auth_data", JSON.stringify(auth_data))
-
-            axios
-                .post(register_path, register_data)
+            axios_instance
+                .post(REGISTER_PATH, {
+                    login: auth_data.login,
+                    password: auth_data.password,
+                })
                 .then((response) => {
                     let r = response.data
 
-                    if (r.code == 1) {
+                    if (r.code == 0) {
                         commit("auth_user", {
-                            email: auth_data.email,
-                            token: r.token,
+                            login: auth_data.login,
+                            token: r.data.token,
                         })
-                        localStorage.setItem("token", r.token)
-                        localStorage.setItem("email", r.email)
-                        localStorage.setItem("role", r.role)
-                        localStorage.setItem("user_id", r.user_id)
+                        localStorage.setItem("token", r.data.token)
+                        localStorage.setItem("login", r.data.login)
+                        //localStorage.setItem("role", r.data.role)
+                        localStorage.setItem("user_id", r.data._id)
 
                         resolve(r)
                     } else {
@@ -128,21 +129,21 @@ const actions = {
     autoLogin({ commit }) {
         return new Promise((resolve, reject) => {
             let token = localStorage.getItem("token")
-            let email = localStorage.getItem("email")
+            let login = localStorage.getItem("login")
 
-            if (!token || !email) {
+            if (!token || !login) {
                 reject()
                 return
             }
 
-            commit("auth_user", { email: email, token: token })
+            commit("auth_user", { login: login, token: token })
             resolve()
         })
     },
     logout: ({ commit }) => {
         return new Promise((resolve, reject) => {
             commit("clear_auth_data")
-            localStorage.removeItem("email")
+            localStorage.removeItem("login")
             localStorage.removeItem("token")
             router.push("login")
             resolve()

@@ -96,15 +96,22 @@ export default {
     },
     computed: {},
     methods: {
+        makeToast(variant = null, text) {
+            this.$bvToast.toast(text, {
+                title: `${variant || "info"}`,
+                variant: variant,
+                solid: true,
+            })
+        },
         async onAddAccount() {
             try {
-                if (this.login == "") {
-                    console.log("empty login")
+                if (!this.login) {
+                    this.makeToast("danger", "Empty login")
                     return
                 }
 
-                if (this.li_at == "") {
-                    console.log("empty li_at")
+                if (!this.li_at) {
+                    this.makeToast("danger", "Empty li_at")
                     return
                 }
 
@@ -113,14 +120,16 @@ export default {
                 })
                 let r = res.data
                 if (r.code < 0) {
-                    let msg = "Error loading accounts." + r.msg
+                    let msg = "Error create account." + r.msg
+                    this.makeToast("danger", "Can't create account")
                     console.log(msg)
                 } else {
-                    console.log("account added - success!")
+                    this.makeToast("success", "Account added ")
                 }
             } catch (error) {
                 let msg = "Error loading accounts. ERROR: " + error
                 console.error(msg, error.stack)
+                this.makeToast("danger", "Can't create account")
             }
         },
     },

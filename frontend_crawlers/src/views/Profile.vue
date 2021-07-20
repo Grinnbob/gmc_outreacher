@@ -19,7 +19,7 @@
                         <b-button
                             @click.prevent="onLogout"
                             variant="outline-primary"
-                            >Add profile</b-button
+                            >Logout</b-button
                         >
                     </div>
                 </div>
@@ -28,7 +28,6 @@
 
         <card>
             <card>
-                <p class="info">E-mail</p>
                 <p>{{ user_data.login }}</p>
                 <div v-if="user_data.role == 'admin'">
                     <p class="info">Role</p>
@@ -39,9 +38,6 @@
     </div>
 </template>
 <script>
-import axios from "@/api/axios-auth"
-const PROFILE_API = "/user"
-
 export default {
     data() {
         return {
@@ -65,22 +61,7 @@ export default {
                     console.error("login error: ", err)
                 })
         },
-        async loadUser() {
-            try {
-                let res = await axios.post(PROFILE_API, {})
-                let r = res.data
-                if (r.code < 0) {
-                    let msg = "Error loading user." + r.msg
-                    console.log(msg)
-                } else {
-                    this.user_data = JSON.parse(r.user)
-                    console.log("user: ", this.user_data)
-                }
-            } catch (error) {
-                let msg = "Error loading user. ERROR: " + error
-                console.error(msg, error.stack)
-            }
-        },
+        async loadUser() {},
     },
     async mounted() {
         await this.loadUser()
