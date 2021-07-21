@@ -1,26 +1,43 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 
+Vue.use(VueRouter)
+
+// Layouts
 const DashboardLayout = () => import("../containers/DashboardLayout.vue")
 const AuthLayout = () => import("../views/Auth/AuthLayout.vue")
 
+// Auth
 const Login = () => import("../views/Auth/Login.vue")
 const Register = () => import("../views/Auth/Register.vue")
 
-const LinkedinGeneral = () => import("../views/Linkedin/General.vue")
-const LinkedinSearchSN = () => import("../views/Linkedin/Search_sn.vue")
-const LinkedinSearchSscribeSN = () =>
-    import("../views/Linkedin/Search_scribe_sn.vue")
-const LinkedinSearch = () => import("../views/Linkedin/Search.vue")
-const LinkedinSearchSscribe = () =>
-    import("../views/Linkedin/Search_scribe.vue")
+const Docs = () => import("../views/Docs.vue")
 
+// General
 const Profile = () => import("../views/Profile.vue")
 const Accounts = () => import("../views/Accounts.vue")
 const AccountAdd = () => import("../views/AccountAdd.vue")
 const Actions = () => import("../views/Actions.vue")
 
-Vue.use(VueRouter)
+// Linkedin navigation
+const navigateLinkedinGeneral = () =>
+    import("../views/Linkedin/General/General.vue")
+const navigateLinkedin = () => import("../views/Linkedin/General/Linkedin.vue")
+const navigateLinkedinSN = () =>
+    import("../views/Linkedin/General/Linkedin_sn.vue")
+
+// Actions Linkedin
+const LinkedinSearch = () => import("../views/Linkedin/Search.vue")
+const LinkedinSearchSscribe = () =>
+    import("../views/Linkedin/Search_scribe.vue")
+const LinkedinScribe = () => import("../views/Linkedin/Scribe.vue")
+
+// Actions Linkedin SN
+const LinkedinSearchSN = () => import("../views/Linkedin/Search_sn.vue")
+const LinkedinSearchSscribeSN = () =>
+    import("../views/Linkedin/Search_scribe_sn.vue")
+const LinkedinScribeSN = () => import("../views/Linkedin/Scribe_sn.vue")
+
 const routes = [
     {
         path: "/",
@@ -45,9 +62,29 @@ const routes = [
         component: DashboardLayout,
         children: [
             {
+                path: "/docs",
+                name: "Docs",
+                component: Docs,
+            },
+            {
                 path: "/linkedin",
                 name: "Linkedin General",
-                component: LinkedinGeneral,
+                component: navigateLinkedinGeneral,
+            },
+            {
+                path: "/navigate/linkedin",
+                name: "Linkedin General",
+                component: navigateLinkedin,
+            },
+            {
+                path: "/navigate/linkedin/sn",
+                name: "Linkedin General",
+                component: navigateLinkedinSN,
+            },
+            {
+                path: "/linkedin/sn/scribe",
+                name: "Linkedin SN scribe profile",
+                component: LinkedinScribeSN,
             },
             {
                 path: "/linkedin/sn/search",
@@ -58,6 +95,11 @@ const routes = [
                 path: "/linkedin/sn/search/scribe",
                 name: "Linkedin search scribe SN",
                 component: LinkedinSearchSscribeSN,
+            },
+            {
+                path: "/linkedin/scribe",
+                name: "Linkedin scribe profile",
+                component: LinkedinScribe,
             },
             {
                 path: "/linkedin/search",

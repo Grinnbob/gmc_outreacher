@@ -33,6 +33,7 @@
                                 <b-form-input
                                     id="email-input"
                                     v-model="model.login"
+                                    :state="login_state"
                                     placeholder="Enter email"
                                 ></b-form-input>
                             </b-form-group>
@@ -45,6 +46,7 @@
                                 <b-form-input
                                     id="password-input"
                                     v-model="model.password"
+                                    :state="password_state"
                                     placeholder="Enter password"
                                 ></b-form-input>
                             </b-form-group>
@@ -85,6 +87,9 @@ export default {
             loading: false,
             //color: "#a7a7ff",
 
+            login_state: null,
+            password_state: null,
+
             model: {
                 login: "",
                 password: "",
@@ -100,11 +105,23 @@ export default {
             document.body.classList.remove("off-canvas-sidebar")
         },
         onSubmit() {
-            if (!this.model.login || !this.model.password) {
+            if (!this.model.login) {
+                this.login_state = false
                 console.log("Empty input")
                 //this.error = "Empty input"
                 return
             }
+
+            this.login_state = true
+
+            if (!this.model.password) {
+                this.password_state = false
+                console.log("Empty input")
+                //this.error = "Empty input"
+                return
+            }
+
+            this.password_state = true
 
             var _this = this
             this.loading = true
@@ -119,11 +136,15 @@ export default {
                     (reject) => {
                         console.log("error here: ", reject)
                         _this.loading = false
+                        _this.password_state = false
+                        _this.login_state = false
                     }
                 )
                 .catch((err) => {
                     console.error("login error: ", err)
                     _this.loading = false
+                    _this.password_state = false
+                    _this.login_state = false
                 })
         },
     },

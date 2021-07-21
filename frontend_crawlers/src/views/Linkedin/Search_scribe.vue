@@ -4,14 +4,14 @@
             <b-container>
                 <b-row>
                     <b-col cols="4" class="d-flex align-self-center">
-                        <h3>
+                        <p class="title">
                             Search detailed
-                        </h3>
+                        </p>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
-                        <p>
+                        <p class="text">
                             Get profiles with detailed info from basic Linkedin
                             search. This action may take a time ~ 2 min /
                             profile
@@ -387,6 +387,16 @@ export default {
 }
 </script>
 <style>
+.title {
+    font-size: 32px;
+    line-height: 65px;
+    font-weight: bold;
+    color: #262a79;
+}
+.text {
+    color: #262a79;
+    font-size: 20px;
+}
 .card_title {
     text-align: center;
     font-size: 35px;

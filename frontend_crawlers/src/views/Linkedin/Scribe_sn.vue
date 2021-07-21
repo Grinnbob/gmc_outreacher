@@ -5,14 +5,14 @@
                 <b-row>
                     <b-col cols="4" class="d-flex align-self-center">
                         <p class="title">
-                            Search SN
+                            Scribe profile
                         </p>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
                         <p class="text">
-                            Get profiles with info from Sales Navigator search.
+                            Get basic Linkedin profile info by link.
                         </p>
                     </b-col>
                 </b-row>
@@ -28,7 +28,7 @@
                                 Select account
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose your linkedin account. (It must have active Sales Navigator option)'
+                                        'Choose your linkedin account'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -45,10 +45,10 @@
                     <b-row class="my-1">
                         <b-col sm="2">
                             <p class="mb-2">
-                                Search link
+                                Profile link
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Paste here link to Linkedin Sales Navigator search'
+                                        'Paste here link to Linkedin profile'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -57,28 +57,8 @@
                         </b-col>
                         <b-col sm="6">
                             <b-form-input
-                                v-model="search_url"
-                                placeholder="https://www.linkedin.com/sales/search/people?keywords=marketeer&rsLogId=909690209&searchSessionId=l3I46hRKQ8qmeaukxW8ROA%3D%3D"
-                            ></b-form-input>
-                        </b-col>
-                    </b-row>
-                    <b-row class="my-1">
-                        <b-col sm="2">
-                            <p class="mb-2">
-                                Pages
-                                <b-icon
-                                    v-b-popover.hover.top="
-                                        'Choose how many pages do you want to scribe'
-                                    "
-                                    class="ml-2"
-                                    icon="exclamation-circle"
-                                ></b-icon>
-                            </p>
-                        </b-col>
-                        <b-col sm="6">
-                            <b-form-input
-                                v-model="interval_pages"
-                                type="number"
+                                v-model="linkedin"
+                                placeholder="https://www.linkedin.com/someuser"
                             ></b-form-input>
                         </b-col>
                     </b-row>
@@ -86,7 +66,7 @@
                         <b-col sm="2"> </b-col>
                         <b-col sm="10">
                             <b-button
-                                @click.prevent="search_sn"
+                                @click.prevent="search"
                                 variant="outline-primary"
                                 >Start</b-button
                             >
@@ -160,9 +140,9 @@ import axios from "@/api/axios-auth"
 
 const ACCOUNTS_API = "/accounts"
 const ACCTION_API = "/action"
-const SN_SEARCH_API = "/sn/search"
+const SCRIBE_API = "/scribe"
 
-const ACTION_TYPE = 8
+const ACTION_TYPE = 5
 
 export default {
     data() {
@@ -170,8 +150,7 @@ export default {
             loaded: false,
 
             selected_account: "",
-            search_url: "",
-            interval_pages: 10,
+            linkedin: "",
 
             account_data: [],
             actions_data: {},
@@ -305,45 +284,31 @@ export default {
                 console.log(err)
             }
         },
-        async search_sn() {
+        async search() {
             if (!this.selected_account) {
                 this.makeToast("danger", "Select account")
                 this.makeToast("danger", this.selected_account)
                 return
             }
 
-            if (this.search_url == "") {
-                this.makeToast("danger", "Empty search url")
+            if (this.linkedin == "") {
+                this.makeToast("danger", "Empty profile url")
                 return
             }
 
-            if (
-                !this.search_url.includes("linkedin") ||
-                !this.search_url.includes("search") ||
-                !this.search_url.includes("sales")
-            ) {
+            if (!this.linkedin.includes("linkedin")) {
                 this.makeToast("danger", "Wrong url")
-                return
-            }
-
-            if (this.interval_pages < 1 || this.interval_pages > 100) {
-                console.log("Incorrect interval_pages")
-                this.makeToast(
-                    "danger",
-                    "Wrong pages number. It must be in range from 1 to 100"
-                )
                 return
             }
 
             try {
                 this.makeToast("info", "Action started")
 
-                let res = await axios.post(SN_SEARCH_API, {
+                let res = await axios.post(SCRIBE_API, {
                     credentials_id: this.selected_account,
                     input_data: {
-                        campaign_data: {
-                            search_url: this.search_url,
-                            interval_pages: this.interval_pages,
+                        prospect_data: {
+                            linkedin: this.linkedin,
                         },
                     },
                 })

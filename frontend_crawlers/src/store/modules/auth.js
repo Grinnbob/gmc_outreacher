@@ -145,7 +145,8 @@ const actions = {
             commit("clear_auth_data")
             localStorage.removeItem("login")
             localStorage.removeItem("token")
-            router.push("login")
+            //router.push('login')
+            router.push({ path: "login" })
             resolve()
         })
     },

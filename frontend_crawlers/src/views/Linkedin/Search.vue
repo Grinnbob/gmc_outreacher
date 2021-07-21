@@ -4,14 +4,14 @@
             <b-container>
                 <b-row>
                     <b-col cols="4" class="d-flex align-self-center">
-                        <h3>
+                        <p class="title">
                             Search
-                        </h3>
+                        </p>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
-                        <p>
+                        <p class="text">
                             Get profiles with info from basic Linkedin search.
                         </p>
                     </b-col>
@@ -160,7 +160,7 @@ import axios from "@/api/axios-auth"
 
 const ACCOUNTS_API = "/accounts"
 const ACCTION_API = "/action"
-const SN_SEARCH_API = "/search"
+const SEARCH_API = "/search"
 
 const ACTION_TYPE = 5
 
@@ -337,7 +337,7 @@ export default {
             try {
                 this.makeToast("info", "Action started")
 
-                let res = await axios.post(SN_SEARCH_API, {
+                let res = await axios.post(SEARCH_API, {
                     credentials_id: this.selected_account,
                     input_data: {
                         campaign_data: {
@@ -386,6 +386,16 @@ export default {
 }
 </script>
 <style>
+.title {
+    font-size: 32px;
+    line-height: 65px;
+    font-weight: bold;
+    color: #262a79;
+}
+.text {
+    color: #262a79;
+    font-size: 20px;
+}
 .card_title {
     text-align: center;
     font-size: 35px;

@@ -13,13 +13,6 @@ const instance = axios.create({
     },
 })
 
-// todo remove it
-// instance.interceptors.request.use(function(request) {
-//     request.data.login = "servicelogin@gsuit.com"
-//     request.data.password = "mypass1234"
-//     return request
-// })
-
 instance.interceptors.response.use(
     function(response) {
         // Do something with response data

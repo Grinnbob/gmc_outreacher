@@ -33,6 +33,7 @@
                                 <b-form-input
                                     id="email-input"
                                     v-model="model.login"
+                                    :state="login_state"
                                     placeholder="Enter email"
                                 ></b-form-input>
                             </b-form-group>
@@ -45,6 +46,7 @@
                                 <b-form-input
                                     id="password-input"
                                     v-model="model.password"
+                                    :state="password_state"
                                     placeholder="Enter password"
                                 ></b-form-input>
                             </b-form-group>
@@ -57,6 +59,7 @@
                                 <b-form-input
                                     id="repeat-password-input"
                                     v-model="model.repeat_password"
+                                    :state="repeat_password_state"
                                     placeholder="Password"
                                 ></b-form-input>
                             </b-form-group>
@@ -115,6 +118,10 @@ export default {
             loading: false,
             //color: "#a7a7ff",
 
+            login_state: null,
+            password_state: null,
+            repeat_password_state: null,
+
             model: {
                 login: "",
                 password: "",
@@ -131,12 +138,19 @@ export default {
             ) {
                 console.log("Empty input")
                 //this.error = "Empty input"
+                this.password_state = false
+                this.repeat_password_state = false
+                this.login_state = false
                 return
             }
+
+            this.login_state = true
 
             if (this.model.password !== this.model.repeat_password) {
                 console.log("Password mismatch")
                 //this.error = "Password mismatch"
+                this.password_state = false
+                this.repeat_password_state = false
                 return
             }
 
@@ -153,11 +167,15 @@ export default {
                     (reject) => {
                         console.log("error here: ", reject)
                         _this.loading = false
+                        _this.password_state = false
+                        _this.login_state = false
                     }
                 )
                 .catch((err) => {
                     console.error("register error: ", err)
                     _this.loading = false
+                    _this.password_state = false
+                    _this.login_state = false
                 })
         },
     },

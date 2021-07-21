@@ -4,9 +4,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-4 d-flex align-self-center">
-                        <h3>
+                        <p class="title">
                             Add account
-                        </h3>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -16,7 +16,7 @@
             <div class="container">
                 <b-row class="my-1">
                     <b-col sm="8">
-                        <p>
+                        <p class="text">
                             Enter your linkedin li_at cookie. To get them -
                             download
                             <b-link
@@ -138,6 +138,16 @@ export default {
 }
 </script>
 <style>
+.title {
+    font-size: 32px;
+    line-height: 65px;
+    font-weight: bold;
+    color: #262a79;
+}
+.text {
+    color: #262a79;
+    font-size: 20px;
+}
 .card_title {
     text-align: center;
     font-size: 35px;

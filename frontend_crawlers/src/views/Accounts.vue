@@ -4,7 +4,7 @@
             <b-container>
                 <b-row>
                     <b-col class="col-4 d-flex align-self-center">
-                        <h3>Accounts</h3>
+                        <p class="title">Accounts</p>
                     </b-col>
                     <b-col
                         class="col-8 d-flex flex-row-reverse align-self-center"
@@ -107,6 +107,16 @@ export default {
 }
 </script>
 <style>
+.title {
+    font-size: 32px;
+    line-height: 65px;
+    font-weight: bold;
+    color: #262a79;
+}
+.text {
+    color: #262a79;
+    font-size: 20px;
+}
 .card_title {
     text-align: center;
     font-size: 35px;

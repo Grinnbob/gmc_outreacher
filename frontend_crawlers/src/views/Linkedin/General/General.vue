@@ -1,0 +1,82 @@
+<template>
+    <div>
+        <b-container class="mt-4">
+            <b-row>
+                <b-col>
+                    <p class="text-center title">
+                        Choose actions type
+                    </p>
+
+                    <div class="card-deck justify-content-md-center">
+                        <a href="/navigate/linkedin">
+                            <div
+                                class="card mr-3 mb-3"
+                                style="width: 18rem; height: 11rem;"
+                            >
+                                <div class="card-body text-center mx-4 my-4">
+                                    <p class="card-text card_title">
+                                        Linkedin
+                                    </p>
+                                    <p class="card-text card_text">
+                                        Actions with common Linkedin account
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="/navigate/linkedin/sn">
+                            <div
+                                class="card mr-3 mb-3"
+                                style="width: 18rem; height: 11rem;"
+                            >
+                                <div class="card-body text-center mx-4 my-4">
+                                    <p class="card-text card_title">
+                                        Linkedin SN
+                                    </p>
+                                    <p class="card-text card_text">
+                                        Actions for accounts with paid Sales
+                                        Navigator option
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </b-col>
+            </b-row>
+        </b-container>
+    </div>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            account_data: [],
+        }
+    },
+    computed: {},
+    methods: {},
+    async mounted() {},
+    created() {},
+}
+</script>
+<style>
+.title {
+    font-size: 32px;
+    line-height: 65px;
+    font-weight: bold;
+    color: #262a79;
+}
+.text {
+    color: #262a79;
+    font-size: 20px;
+}
+.card_text {
+    color: #262a79;
+    font-size: 14px;
+}
+.card_title {
+    color: #262a79;
+    font-size: 20px;
+    font-weight: bold;
+}
+</style>

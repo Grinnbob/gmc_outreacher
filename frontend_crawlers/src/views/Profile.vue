@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-4 d-flex align-self-center">
-                        <h3><i class="nc-icon nc-circle-09"></i> Profile</h3>
+                        <p class="title">Profile</p>
                     </div>
                     <div
                         class="col-8 d-flex flex-row-reverse align-self-center"
@@ -41,7 +41,9 @@
 export default {
     data() {
         return {
-            user_data: {},
+            user_data: {
+                login: "",
+            },
         }
     },
     methods: {
@@ -61,16 +63,24 @@ export default {
                     console.error("login error: ", err)
                 })
         },
-        async loadUser() {},
     },
     async mounted() {
-        await this.loadUser()
-        //console.log(this.user_data)
+        this.user_data.login = localStorage.getItem("login")
     },
     created() {},
 }
 </script>
 <style>
+.title {
+    font-size: 32px;
+    line-height: 65px;
+    font-weight: bold;
+    color: #262a79;
+}
+.text {
+    color: #262a79;
+    font-size: 20px;
+}
 .card_title {
     text-align: center;
     font-size: 35px;
