@@ -13,7 +13,22 @@
         </card>
 
         <card>
-            <div class="container">
+            <b-container>
+                <b-row class="justify-content-md-center">
+                    <b-col
+                        md="2"
+                        v-if="loading"
+                        class="d-flex align-self-center mt-5"
+                    >
+                        <b-spinner
+                            variant="primary"
+                            label="Spinning"
+                        ></b-spinner>
+                    </b-col>
+                </b-row>
+            </b-container>
+
+            <div class="container" v-if="!loading">
                 <b-row class="my-1">
                     <b-col sm="8">
                         <p class="text">
@@ -41,6 +56,7 @@
                     <b-col sm="6">
                         <b-form-input
                             v-model="login"
+                            :state="login_state"
                             placeholder="Enter your Linkedin login"
                         ></b-form-input>
                     </b-col>
@@ -52,6 +68,7 @@
                     <b-col sm="6">
                         <b-form-input
                             v-model="password"
+                            :state="password_state"
                             placeholder="Enter your password"
                         ></b-form-input>
                     </b-col>
@@ -63,6 +80,7 @@
                     <b-col sm="6">
                         <b-form-input
                             v-model="li_at"
+                            :state="li_at_state"
                             placeholder="Enter your li_at cookie value"
                         ></b-form-input>
                     </b-col>
@@ -71,6 +89,7 @@
                     <b-col sm="2"> </b-col>
                     <b-col sm="10">
                         <b-button
+                            :disabled="loading"
                             @click.prevent="onAddAccount"
                             variant="outline-primary"
                             >Add account</b-button
@@ -89,6 +108,12 @@ const ACCOUNTS_API = "/account"
 export default {
     data() {
         return {
+            loading: false,
+
+            login_state: null,
+            li_at_state: null,
+            password_state: null,
+
             login: "",
             password: "",
             li_at: "",
@@ -107,17 +132,26 @@ export default {
             try {
                 if (!this.login) {
                     this.makeToast("danger", "Empty login")
+                    this.login_state = false
                     return
                 }
 
+                this.login_state = true
+
                 if (!this.li_at) {
                     this.makeToast("danger", "Empty li_at")
+                    this.li_at_state = false
                     return
                 }
+
+                this.li_at_state = true
+
+                this.loading = true
 
                 let res = await axios.post(ACCOUNTS_API, {
                     input_data: { li_at: this.li_at, login: this.login },
                 })
+
                 let r = res.data
                 if (r.code < 0) {
                     let msg = "Error create account." + r.msg
@@ -125,12 +159,15 @@ export default {
                     console.log(msg)
                 } else {
                     this.makeToast("success", "Account added ")
+                    this.$router.push({ path: "/accounts" })
                 }
             } catch (error) {
                 let msg = "Error loading accounts. ERROR: " + error
                 console.error(msg, error.stack)
                 this.makeToast("danger", "Can't create account")
             }
+
+            this.loading = false
         },
     },
     async mounted() {},

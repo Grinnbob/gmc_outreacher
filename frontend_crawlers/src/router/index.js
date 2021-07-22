@@ -11,6 +11,7 @@ const AuthLayout = () => import("../views/Auth/AuthLayout.vue")
 const Login = () => import("../views/Auth/Login.vue")
 const Register = () => import("../views/Auth/Register.vue")
 
+const Guide = () => import("../views/Guide.vue")
 const Docs = () => import("../views/Docs.vue")
 
 // General
@@ -61,6 +62,11 @@ const routes = [
         name: "Dashboard",
         component: DashboardLayout,
         children: [
+            {
+                path: "/guide",
+                name: "Guide",
+                component: Guide,
+            },
             {
                 path: "/docs",
                 name: "Docs",

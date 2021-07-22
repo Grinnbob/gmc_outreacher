@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-navbar toggleable="md" type="light" variant="light">
-            <b-navbar-brand href="#">
+            <b-navbar-brand href="/guide">
                 <img src="../../public/logo.png" />
             </b-navbar-brand>
 
