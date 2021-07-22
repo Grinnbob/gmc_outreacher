@@ -169,7 +169,7 @@ router.post("/post/engagement", async (req, res) => {
             }
         )
     } catch (err) {
-        log.error(`Can't update action for ${task.user.login}`)
+        log.error(`Can't update action for ${task.userId}`)
     }
 
     return res.json(result_data)

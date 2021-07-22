@@ -83,8 +83,8 @@ router.post("/sn/scribe", async (req, res) => {
         let input_data = task.input_data
         let task_data = utils.serialize_data(input_data)
 
-        if( !task.prospect_data ) return res.status(400).send("Wrong input data format - empty prospect_data.").end()
-        if( !task.prospect_data.linkedin ) return res.status(400).send("Wrong input data format - empty linkedin.").end()
+        if( !task_data.prospect_data ) return res.status(400).send("Wrong input data format - empty prospect_data.").end()
+        if( !task_data.prospect_data.linkedin ) return res.status(400).send("Wrong input data format - empty linkedin.").end()
 
         try {
             // create action
@@ -169,7 +169,7 @@ router.post("/sn/scribe", async (req, res) => {
             }
         )
     } catch (err) {
-        log.error(`Can't update action for ${task.user.login}`)
+        log.error(`Can't update action for ${task.userId}`)
     }
 
     return res.json(result_data)

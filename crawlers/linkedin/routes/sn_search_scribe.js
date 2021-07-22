@@ -60,7 +60,7 @@ async function scribeWorker(result_data, browser, action, task, cookies, credent
             }
         )
     } catch (err) {
-        log.error(`Can't update action for ${task.user.login}`)
+        log.error(`Can't update action for ${task.userId}`)
     }
 
     log.debug("sn_searcScribehWorker RES: ", result_data)
