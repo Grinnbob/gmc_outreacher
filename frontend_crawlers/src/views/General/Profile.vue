@@ -1,13 +1,14 @@
 <template>
     <div>
         <card>
-            <div class="container">
-                <div class="row">
-                    <div class="col-4 d-flex align-self-center">
+            <b-container>
+                <b-row>
+                    <b-col md="4" class="d-flex align-self-center">
                         <p class="title">Profile</p>
-                    </div>
-                    <div
-                        class="col-8 d-flex flex-row-reverse align-self-center"
+                    </b-col>
+                    <b-col
+                        md="8"
+                        class="d-flex flex-row-reverse align-self-center"
                     >
                         <!-- <button
                             @click.prevent="change_password"
@@ -21,9 +22,9 @@
                             variant="outline-primary"
                             >Logout</b-button
                         >
-                    </div>
-                </div>
-            </div>
+                    </b-col>
+                </b-row>
+            </b-container>
         </card>
 
         <card>

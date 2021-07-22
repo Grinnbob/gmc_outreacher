@@ -11,14 +11,16 @@ const AuthLayout = () => import("../views/Auth/AuthLayout.vue")
 const Login = () => import("../views/Auth/Login.vue")
 const Register = () => import("../views/Auth/Register.vue")
 
-const Guide = () => import("../views/Guide.vue")
-const Docs = () => import("../views/Docs.vue")
-
 // General
-const Profile = () => import("../views/Profile.vue")
-const Accounts = () => import("../views/Accounts.vue")
-const AccountAdd = () => import("../views/AccountAdd.vue")
-const Actions = () => import("../views/Actions.vue")
+const Profile = () => import("../views/General/Profile.vue")
+const Accounts = () => import("../views/General/Accounts.vue")
+const AccountAdd = () => import("../views/General/AccountAdd.vue")
+const Actions = () => import("../views/General/Actions.vue")
+const Guide = () => import("../views/General/Guide.vue")
+const Docs = () => import("../views/General/Docs.vue")
+
+// Admin
+const AdminUsers = () => import("../views/Admin/Users.vue")
 
 // Linkedin navigation
 const navigateLinkedinGeneral = () =>
@@ -59,8 +61,22 @@ const routes = [
     },
     {
         path: "/",
+        name: "Admin",
+        component: DashboardLayout,
+        meta: { requiresAuth: true, requiresAdmin: true },
+        children: [
+            {
+                path: "/admin/users",
+                name: "Admin Users",
+                component: AdminUsers,
+            },
+        ],
+    },
+    {
+        path: "/",
         name: "Dashboard",
         component: DashboardLayout,
+        meta: { requiresAuth: true },
         children: [
             {
                 path: "/guide",
@@ -145,6 +161,25 @@ const router = new VueRouter({
     mode: "history",
     base: process.env.BASE_URL,
     routes,
+})
+
+router.beforeEach((to, from, next) => {
+    let token = localStorage.getItem("token")
+    let role = localStorage.getItem("role")
+
+    let requireAuth = to.matched.some((record) => record.meta.requiresAuth)
+    let requireAdmin = to.matched.some((record) => record.meta.requiresAdmin)
+
+    if (requireAuth && !token) {
+        next("/login")
+    } else if (token && (to.path == "/login" || to.path == "/register")) {
+        next("/guide")
+    } else if (requireAdmin && role != 3) {
+        // string here, 3 = admin, 2 = api user, 1 = common user
+        next("/guide")
+    } else {
+        next()
+    }
 })
 
 export default router
