@@ -142,7 +142,7 @@ const ACCOUNTS_API = "/accounts"
 const ACCTION_API = "/action"
 const SCRIBE_API = "/scribe"
 
-const ACTION_TYPE = 5
+const ACTION_TYPE = 9
 
 export default {
     data() {
@@ -255,9 +255,7 @@ export default {
                         )
                     }
                     try {
-                        this.last_result = JSON.parse(
-                            r.data.result_data.data
-                        ).arr
+                        this.last_result = [JSON.parse(r.data.result_data.data)]
                     } catch (err) {
                         console.log(
                             "can't parse result data for actions: ",
@@ -267,6 +265,8 @@ export default {
                     console.log("Actions: ", this.actions_data)
                     console.log("last_result: ", this.last_result)
                 }
+
+                this.formatResult()
             } catch (error) {
                 let msg = "Error loading actions. ERROR: " + error
                 console.error(msg, error.stack)
@@ -274,6 +274,22 @@ export default {
             }
 
             this.loaded = true
+        },
+        formatResult() {
+            // replace arrays with strings
+            if (!this.last_result || this.last_result.length < 1) return
+
+            this.last_result = this.last_result.map((row) => {
+                for (let key of Object.keys(row)) {
+                    if (Array.isArray(row[key]) && row[key].length > 0)
+                        row[key] = row[key].join(", ")
+                    else if (Array.isArray(row[key]) && row[key].length === 0)
+                        row[key] = ""
+                }
+                return row
+            })
+
+            console.log("last_result: ", this.last_result)
         },
         async refresh() {
             try {
