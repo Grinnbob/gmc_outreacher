@@ -5,12 +5,11 @@ const models = require("../../models/models.js")
 var log = require("loglevel").getLogger("o24_logger")
 
 const status_codes = require("../status_codes")
-const BCRYPT_ROUNDS = 10
 
 
 router.get("/users", async (req, res) => {
     let result_data = {}
-    // todo check here admin role else 403
+    if( req.body.role !== 3 ) return res.status(403).send("Permission denied").end()
 
     try {
         let users = await models.Users.find()
