@@ -19,6 +19,12 @@
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->
+            <b-navbar-nav class="ml-auto" v-if="role == 3">
+                <b-nav-item-dropdown text="Admin" right>
+                    <b-dropdown-item href="/admin/users">Users</b-dropdown-item>
+                </b-nav-item-dropdown>
+            </b-navbar-nav>
+
             <b-navbar-nav class="ml-auto">
                 <b-nav-item-dropdown text="Settings" right>
                     <b-dropdown-item href="/profile">Profile</b-dropdown-item>
@@ -34,7 +40,18 @@
         </div>
     </div>
 </template>
-<script></script>
+<script>
+export default {
+    data() {
+        return {
+            role: null,
+        }
+    },
+    mounted() {
+        this.role = localStorage.getItem("role")
+    },
+}
+</script>
 <style>
 .text {
     color: #262a79;

@@ -263,7 +263,6 @@ export default {
                         )
                     }
                     console.log("Actions: ", this.actions_data)
-                    console.log("last_result: ", this.last_result)
                 }
 
                 this.formatResult()

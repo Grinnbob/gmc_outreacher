@@ -73,7 +73,7 @@ const actions = {
                         })
                         localStorage.setItem("token", r.data.token)
                         localStorage.setItem("login", r.data.login)
-                        //localStorage.setItem("role", r.data.role)
+                        localStorage.setItem("role", r.data.role)
                         localStorage.setItem("user_id", r.data._id)
 
                         console.log("r: ", r)
@@ -108,7 +108,7 @@ const actions = {
                         })
                         localStorage.setItem("token", r.data.token)
                         localStorage.setItem("login", r.data.login)
-                        //localStorage.setItem("role", r.data.role)
+                        localStorage.setItem("role", r.data.role)
                         localStorage.setItem("user_id", r.data._id)
 
                         resolve(r)
