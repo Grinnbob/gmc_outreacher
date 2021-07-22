@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build",
+        "build": "vue-cli-service build  --mode production",
         "serve-prod": "vue-cli-service serve --mode production",
         "lint": "vue-cli-service lint"
     },
@@ -12,6 +12,7 @@
         "axios": "^0.21.1",
         "bootstrap-vue": "^2.1.0",
         "core-js": "^3.6.5",
+        "path": "^0.12.7",
         "vue": "^2.6.11",
         "vue-router": "^3.2.0",
         "vuex": "^3.4.0"

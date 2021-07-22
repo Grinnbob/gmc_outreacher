@@ -41,7 +41,7 @@
                     <b-col sm="6">
                         <b-form-input
                             v-model="login"
-                            placeholder="Enter your login"
+                            placeholder="Enter your Linkedin login"
                         ></b-form-input>
                     </b-col>
                 </b-row>
