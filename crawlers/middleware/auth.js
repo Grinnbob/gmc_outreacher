@@ -23,6 +23,7 @@ const tokenAuth = async (req) => {
 
   if (!verifyResult.success) return { success: false, code: verifyResult.code, message: verifyResult.message };
   req.body.userId = verifyResult.userId;
+  req.body.role = verifyResult.role;
   return { success: true };
 };
 
@@ -33,7 +34,7 @@ const verifyToken = async ({ token }) => {
     const now = Date.now();
     if (userFromDB.tokenExpiresAt < now) return { success: false, message: 'Token not found', code: 401 };
   
-    return { success: true, userId: userFromDB._id };
+    return { success: true, userId: userFromDB._id, role: userFromDB.role };
 };
 
 module.exports = authMiddleware;

@@ -63,7 +63,8 @@ router.post("/auth", async (req, res) => {
             data: {
                 token: accessToken,
                 _id: user._id,
-                login: user.login
+                login: user.login,
+                role: user.role
             }
         }
 
