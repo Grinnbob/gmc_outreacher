@@ -45,6 +45,7 @@ const routes = [
     {
         path: "/",
         name: "Auth",
+        redirect: "/login",
         component: AuthLayout,
         children: [
             {
