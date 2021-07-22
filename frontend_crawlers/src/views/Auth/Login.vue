@@ -130,7 +130,7 @@ export default {
                 .dispatch("auth/login", this.model)
                 .then(
                     (resolve) => {
-                        _this.$router.push("profile")
+                        _this.$router.push("guide")
                         _this.loading = false
                     },
                     (reject) => {
