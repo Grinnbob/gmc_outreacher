@@ -112,6 +112,8 @@ let actionSchema = new Schema({
 
     result_data: Object,
 
+    meta_data: Object,
+
     ack: {
         type: Number, // 1 = in work, 0 = free
         default: 0,

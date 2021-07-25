@@ -13,14 +13,16 @@ const action_codes = require("../action_codes").action_codes
 
 async function scribeWorker(result_data, browser, action, task, cookies, credentials_id) {
     try {
-        if (result_data.data.arr.length > 0) {
-            for (let i = 0; i < result_data.data.arr.length; i++) {
+        const total_data = result_data.data.arr.length
+
+        if (total_data > 0) {
+            for (let i = 0; i < total_data; i++) {
                 // start work
                 let sn_scribeAction =
                     new modules.sn_scribeAction.SN_ScribeAction(
                         cookies,
                         credentials_id,
-                        result_data.data.arr[i].linkedin
+                        result_data.data.arr[i].linkedin_sn
                     )
                 browser = await sn_scribeAction.startBrowser()
                 result_data.data.arr[i] = {
@@ -31,9 +33,26 @@ async function scribeWorker(result_data, browser, action, task, cookies, credent
 
                 log.debug(
                     `... completed: ${i + 1} / ${
-                        result_data.data.arr.length
+                        total_data
                     } ...`
                 )
+
+                try {
+                    // update action
+                    await models.Actions.findOneAndUpdate(
+                        { _id: action._id },
+                        {
+                            meta_data: {
+                                progress: {
+                                    done: i + 1,
+                                    total: total_data
+                                }
+                            },
+                        }
+                    )
+                } catch (err) {
+                    log.error(`Can't update action for ${task.userId}: ${err}`)
+                }
             }
 
             log.debug(
@@ -175,36 +194,41 @@ router.post("/sn/search/scribe", async (req, res) => {
     if( !task.input_data ) return res.status(400).send("Wrong input data format - empty input_data.").end()
     if( !task.credentials_id ) return res.status(400).send("Wrong input data format - empty credentials_id.").end()
 
+    credentials_id = task.credentials_id
+    let input_data = task.input_data
+    let task_data = utils.serialize_data(input_data)
+
+    if( !task_data.campaign_data ) return res.status(400).send("Wrong input data format.").end()
+    if( !task_data.campaign_data.search_url ) return res.status(400).send("Wrong input data format.").end()
+    if( !task_data.campaign_data.interval_pages ) return res.status(400).send("Wrong input data format.").end()
+
     try {
-        credentials_id = task.credentials_id
-        let input_data = task.input_data
-        let task_data = utils.serialize_data(input_data)
+        // create action
+        action = await models.Actions.create({
+            action: action_codes.linkedin_search_scribe_sn,
+            user_id: task.userId,
+            started_at: Date.now(),
+            status: 0,
+            ack: 1,
+            input_data: input_data,
+            result_data: result_data,
+        })
+    } catch (err) {
+        throw new Error(
+            `Can't save action for ${action_codes.linkedin_search_scribe_sn} for user ${task.userId}: ${err}`
+        )
+    }
 
-        if( !task_data.campaign_data ) return res.status(400).send("Wrong input data format.").end()
-        if( !task_data.campaign_data.search_url ) return res.status(400).send("Wrong input data format.").end()
-        if( !task_data.campaign_data.interval_pages ) return res.status(400).send("Wrong input data format.").end()
+    try {
+        var cookies = await utils.get_cookies(credentials_id)
+    } catch (err) {
+        log.error(`Cookies problems: ${err}`)
+        return res.status(400).send(`Cookies problems: ${err}`)
+    }
 
-        try {
-            // create action
-            action = await models.Actions.create({
-                action: action_codes.linkedin_search_scribe_sn,
-                user_id: task.userId,
-                started_at: Date.now(),
-                status: 0,
-                ack: 1,
-                input_data: input_data,
-                result_data: result_data,
-            })
-        } catch (err) {
-            throw new Error(
-                `Can't save action for ${action_codes.linkedin_search_scribe_sn} for user ${task.userId}: ${err}`
-            )
-        }
-
-        let cookies = await utils.get_cookies(credentials_id)
-
+    try {
         // start work
-        sn_searchAction = new modules.sn_searchAction.SN_SearchAction(
+        let sn_searchAction = new modules.sn_searchAction.SN_SearchAction(
             cookies,
             credentials_id,
             task_data.campaign_data.search_url,
@@ -220,8 +244,6 @@ router.post("/sn/search/scribe", async (req, res) => {
         log.debug(
             `... search completed: ${result_data.data.arr.length} found ...`
         )
-
-        scribeWorker(result_data, browser, action, task, cookies, credentials_id) // NOT await
 
     } catch (err) {
         log.error("sn_searcScribehWorker error:", err.stack)
@@ -252,6 +274,8 @@ router.post("/sn/search/scribe", async (req, res) => {
             }
         }
     }
+
+    scribeWorker(result_data, browser, action, task, cookies, credentials_id) // NOT await
 
     return res.json(result_data)
 })

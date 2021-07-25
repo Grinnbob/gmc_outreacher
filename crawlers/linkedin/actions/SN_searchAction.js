@@ -85,7 +85,7 @@ class SN_SearchAction extends action.Action {
 
               let result = {}
 
-              result.linkedin = item.querySelector(mySelectors.selector2).href
+              result.linkedin_sn = item.querySelector(mySelectors.selector2).href
 
               if (full_name != null) {
                 full_name = full_name.innerText

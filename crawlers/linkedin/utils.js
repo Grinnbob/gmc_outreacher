@@ -3,20 +3,6 @@ const modules = require("./modules.js")
 var log = require("loglevel").getLogger("o24_logger")
 const MyExceptions = require("../exceptions/exceptions.js")
 
-const jwt = require("jsonwebtoken")
-
-// todo https://habr.com/ru/company/ruvds/blog/457700/
-function generateToken(user) {
-    const data = {
-        _id: userId,
-        name: user.name,
-        login: user.login,
-    }
-    const signature = "abcdSUPERLINKEDINAPPqwerty000"
-    const expiration = "7d"
-
-    return jwt.sign({ data }, signature, { expiresIn: expiration })
-}
 
 async function get_cookies(credentials_id) {
     let account = await models.Accounts.findOne(
