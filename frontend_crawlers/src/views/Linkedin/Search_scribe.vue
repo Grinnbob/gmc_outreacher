@@ -166,8 +166,13 @@
                                     actions_data.meta_data.progress.total
                             "
                         >
-                            <b-progress :max="meta.total" animated
-                                ><b-progress-bar :value="meta.done"
+                            <b-progress
+                                :max="actions_data.meta_data.progress.total"
+                                animated
+                                ><b-progress-bar
+                                    :value="
+                                        actions_data.meta_data.progress.done
+                                    "
                                     ><span
                                         ><strong
                                             >{{

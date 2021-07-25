@@ -166,8 +166,13 @@
                                     actions_data.meta_data.progress.total
                             "
                         >
-                            <b-progress :max="meta.total" animated
-                                ><b-progress-bar :value="meta.done"
+                            <b-progress
+                                :max="actions_data.meta_data.progress.total"
+                                animated
+                                ><b-progress-bar
+                                    :value="
+                                        actions_data.meta_data.progress.done
+                                    "
                                     ><span
                                         ><strong
                                             >{{
@@ -236,10 +241,6 @@ export default {
             account_data: [],
             actions_data: {},
             last_result: [],
-            meta: {
-                done: 10,
-                total: 100,
-            },
         }
     },
     computed: {},
