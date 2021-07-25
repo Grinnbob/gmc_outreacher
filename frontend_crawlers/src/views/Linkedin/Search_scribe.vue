@@ -101,18 +101,26 @@
                     <b-row>
                         <b-col md="4">
                             <p>
-                                Started at
+                                <b>Started at:</b>
                                 {{
-                                    actions_data &&
-                                    Object.keys(actions_data).length > 0
+                                    actions_data && actions_data.started_at
                                         ? new Date(actions_data.started_at)
                                         : "-"
                                 }}
                             </p>
                         </b-col>
-
+                        <b-col md="4">
+                            <p>
+                                <b>Finished at:</b>
+                                {{
+                                    actions_data && actions_data.finished_at
+                                        ? new Date(actions_data.finished_at)
+                                        : "-"
+                                }}
+                            </p>
+                        </b-col>
                         <b-col
-                            md="8"
+                            md="4"
                             class="d-flex flex-row-reverse align-self-center"
                         >
                             <b-button
@@ -124,6 +132,56 @@
                                 @click.prevent="refresh"
                                 variant="outline-primary"
                                 >Refresh</b-button
+                            >
+                        </b-col>
+                    </b-row>
+                </b-container>
+                <b-container class="mt-4">
+                    <b-row>
+                        <b-col md="12">
+                            <p>
+                                <b>Search link:</b>
+                                {{
+                                    actions_data &&
+                                    actions_data.input_data &&
+                                    actions_data.input_data.campaign_data
+                                        ? actions_data.input_data.campaign_data
+                                              .search_url
+                                        : "-"
+                                }}
+                            </p>
+                        </b-col>
+                    </b-row>
+                </b-container>
+                <b-container class="mt-4">
+                    <b-row>
+                        <b-col
+                            md="12"
+                            v-if="
+                                actions_data &&
+                                    actions_data.ack == 1 &&
+                                    actions_data.meta_data &&
+                                    actions_data.meta_data.progress &&
+                                    actions_data.meta_data.progress.done &&
+                                    actions_data.meta_data.progress.total
+                            "
+                        >
+                            <b-progress :max="meta.total" animated
+                                ><b-progress-bar :value="meta.done"
+                                    ><span
+                                        ><strong
+                                            >{{
+                                                actions_data.meta_data.progress
+                                                    .done
+                                            }}
+                                            /
+                                            {{
+                                                actions_data.meta_data.progress
+                                                    .total
+                                            }}</strong
+                                        ></span
+                                    ></b-progress-bar
+                                ></b-progress
                             >
                         </b-col>
                     </b-row>
@@ -273,10 +331,11 @@ export default {
                     if (this.actions_data.status === 0) {
                         this.makeToast("info", "Action in progress...")
                     } else if (this.actions_data.status === -1) {
-                        this.makeToast(
-                            "danger",
-                            "Something went wrong - empty result"
-                        )
+                        // this.makeToast(
+                        //     "danger",
+                        //     "Something went wrong - empty result"
+                        // )
+                        console.log("Something went wrong - status '-1'")
                     }
                     try {
                         this.last_result = JSON.parse(

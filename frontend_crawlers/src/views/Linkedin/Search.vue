@@ -99,18 +99,26 @@
                     <b-row>
                         <b-col md="4">
                             <p>
-                                Started at
+                                <b>Started at:</b>
                                 {{
-                                    actions_data &&
-                                    Object.keys(actions_data).length > 0
+                                    actions_data && actions_data.started_at
                                         ? new Date(actions_data.started_at)
                                         : "-"
                                 }}
                             </p>
                         </b-col>
-
+                        <b-col md="4">
+                            <p>
+                                <b>Finished at:</b>
+                                {{
+                                    actions_data && actions_data.finished_at
+                                        ? new Date(actions_data.finished_at)
+                                        : "-"
+                                }}
+                            </p>
+                        </b-col>
                         <b-col
-                            md="8"
+                            md="4"
                             class="d-flex flex-row-reverse align-self-center"
                         >
                             <b-button
@@ -270,10 +278,11 @@ export default {
                     if (this.actions_data.status === 0) {
                         this.makeToast("info", "Action in progress...")
                     } else if (this.actions_data.status === -1) {
-                        this.makeToast(
-                            "danger",
-                            "Something went wrong - empty result"
-                        )
+                        // this.makeToast(
+                        //     "danger",
+                        //     "Something went wrong - empty result"
+                        // )
+                        console.log("Something went wrong - status '-1'")
                     }
                     try {
                         this.last_result = JSON.parse(

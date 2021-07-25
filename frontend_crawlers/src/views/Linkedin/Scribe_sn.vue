@@ -5,14 +5,14 @@
                 <b-row>
                     <b-col cols="4" class="d-flex align-self-center">
                         <p class="title">
-                            Scribe profile
+                            Scribe SN profile
                         </p>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
                         <p class="text">
-                            Get basic Linkedin profile info by link.
+                            Get Linkedin Sales Navigator profile info by link.
                         </p>
                     </b-col>
                 </b-row>
@@ -48,7 +48,7 @@
                                 Profile link
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Paste here link to Linkedin profile'
+                                        'Paste here link to Linkedin Sales Navigator profile'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -57,8 +57,8 @@
                         </b-col>
                         <b-col sm="6">
                             <b-form-input
-                                v-model="linkedin"
-                                placeholder="https://www.linkedin.com/someuser"
+                                v-model="linkedin_sn"
+                                placeholder="https://www.linkedin.com/sales/people"
                             ></b-form-input>
                         </b-col>
                     </b-row>
@@ -79,18 +79,26 @@
                     <b-row>
                         <b-col md="4">
                             <p>
-                                Started at
+                                <b>Started at:</b>
                                 {{
-                                    actions_data &&
-                                    Object.keys(actions_data).length > 0
+                                    actions_data && actions_data.started_at
                                         ? new Date(actions_data.started_at)
                                         : "-"
                                 }}
                             </p>
                         </b-col>
-
+                        <b-col md="4">
+                            <p>
+                                <b>Finished at:</b>
+                                {{
+                                    actions_data && actions_data.finished_at
+                                        ? new Date(actions_data.finished_at)
+                                        : "-"
+                                }}
+                            </p>
+                        </b-col>
                         <b-col
-                            md="8"
+                            md="4"
                             class="d-flex flex-row-reverse align-self-center"
                         >
                             <b-button
@@ -140,7 +148,7 @@ import axios from "@/api/axios-auth"
 
 const ACCOUNTS_API = "/accounts"
 const ACCTION_API = "/action"
-const SCRIBE_API = "/scribe"
+const SCRIBE_API = "/sn/scribe"
 
 const ACTION_TYPE = 9
 
@@ -150,7 +158,7 @@ export default {
             loaded: false,
 
             selected_account: "",
-            linkedin: "",
+            linkedin_sn: "",
 
             account_data: [],
             actions_data: {},
@@ -249,10 +257,11 @@ export default {
                     if (this.actions_data.status === 0) {
                         this.makeToast("info", "Action in progress...")
                     } else if (this.actions_data.status === -1) {
-                        this.makeToast(
-                            "danger",
-                            "Something went wrong - empty result"
-                        )
+                        // this.makeToast(
+                        //     "danger",
+                        //     "Something went wrong - empty result"
+                        // )
+                        console.log("Something went wrong - status '-1'")
                     }
                     try {
                         this.last_result = [JSON.parse(r.data.result_data.data)]
@@ -306,13 +315,19 @@ export default {
                 return
             }
 
-            if (this.linkedin == "") {
-                this.makeToast("danger", "Empty profile url")
+            if (this.linkedin_sn == "") {
+                this.makeToast("danger", "Empty profile link")
                 return
             }
 
-            if (!this.linkedin.includes("linkedin")) {
-                this.makeToast("danger", "Wrong url")
+            if (
+                !this.linkedin_sn.includes("linkedin") ||
+                !this.linkedin_sn.includes("/sales/people/")
+            ) {
+                this.makeToast(
+                    "danger",
+                    "Wrong link - past here link to Sales Navigator profile"
+                )
                 return
             }
 
@@ -323,7 +338,7 @@ export default {
                     credentials_id: this.selected_account,
                     input_data: {
                         prospect_data: {
-                            linkedin: this.linkedin,
+                            linkedin_sn: this.linkedin_sn,
                         },
                     },
                 })
@@ -338,7 +353,7 @@ export default {
                 } else {
                     this.actions_data = r.data
                     try {
-                        this.last_result = r.data.result_data.data.arr
+                        this.last_result = [JSON.parse(r.data.result_data.data)]
                     } catch (err) {
                         console.log(
                             "can't parse result data for actions: ",

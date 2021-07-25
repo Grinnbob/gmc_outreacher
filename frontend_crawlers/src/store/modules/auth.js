@@ -146,7 +146,7 @@ const actions = {
             localStorage.removeItem("login")
             localStorage.removeItem("token")
             //router.push('login')
-            router.push({ name: "login" })
+            router.push({ path: "login" })
             resolve()
         })
     },
