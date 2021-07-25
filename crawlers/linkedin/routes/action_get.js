@@ -60,7 +60,11 @@ router.post("/action", async (req, res) => {
         result_data = {
             code: 0,
             if_true: true,
-            data: actions[actions.length - 1],
+            data: actions[0],
+        }
+
+        for(let kek of actions) {
+            console.log(`started_at: ${kek.started_at}, date: ${new Date(kek.started_at)}`);
         }
     } catch (err) {
         log.error("Get action error:", err.stack)

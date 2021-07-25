@@ -84,7 +84,7 @@ router.post("/sn/scribe", async (req, res) => {
         let task_data = utils.serialize_data(input_data)
 
         if( !task_data.prospect_data ) return res.status(400).send("Wrong input data format - empty prospect_data.").end()
-        if( !task_data.prospect_data.linkedin ) return res.status(400).send("Wrong input data format - empty linkedin.").end()
+        if( !task_data.prospect_data.linkedin_sn ) return res.status(400).send("Wrong input data format - empty linkedin_sn.").end()
 
         try {
             // create action
