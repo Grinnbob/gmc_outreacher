@@ -27,9 +27,7 @@ instance.interceptors.response.use(
             store
                 .dispatch("auth/logout")
                 .then(
-                    (resolve) => {
-                        //_this.$router.push("login");
-                    },
+                    (resolve) => {},
                     (reject) => {
                         console.log("error here: ", reject)
                     }
@@ -37,7 +35,6 @@ instance.interceptors.response.use(
                 .catch((err) => {
                     console.error("login error: ", err)
                 })
-            //router.push("login");
             console.log(`Error: Auth error here`)
         }
         return Promise.reject(error)

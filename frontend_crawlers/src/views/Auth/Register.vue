@@ -161,7 +161,7 @@ export default {
                 .dispatch("auth/register", this.model)
                 .then(
                     (resolve) => {
-                        _this.$router.push("guide")
+                        _this.$router.push({ name: "Guide" })
                         _this.loading = false
                     },
                     (reject) => {

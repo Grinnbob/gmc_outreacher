@@ -282,7 +282,7 @@ export default {
                         //     "danger",
                         //     "Something went wrong - empty result"
                         // )
-                        console.log("Something went wrong - status '-1'")
+                        console.log("Something went wrong - status '-1'")``
                     }
                     try {
                         this.last_result = JSON.parse(

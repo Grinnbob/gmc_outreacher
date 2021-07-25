@@ -54,7 +54,7 @@ export default {
                 .dispatch("auth/logout")
                 .then(
                     (resolve) => {
-                        _this.$router.push("login")
+                        _this.$router.push({ name: "Login" })
                     },
                     (reject) => {
                         console.log("error here: ", reject)
