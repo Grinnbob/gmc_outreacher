@@ -83,12 +83,13 @@ class SearchAction extends action.Action {
                             !item
                                 .querySelector(mySelectors.MEMBER_NAME_SELECTOR)
                                 .innerText.toLowerCase()
-                                .includes("linkedin") &&
-                            (item.querySelector(mySelectors.DEGREE_SELECTOR) ==
-                                null ||
-                                !item
-                                    .querySelector(mySelectors.DEGREE_SELECTOR)
-                                    .innerText.includes("1"))
+                                .includes("linkedin") 
+                            //     &&
+                            // (item.querySelector(mySelectors.DEGREE_SELECTOR) ==
+                            //     null ||
+                            //     !item
+                            //         .querySelector(mySelectors.DEGREE_SELECTOR)
+                            //         .innerText.includes("1"))
                         ) {
                             let full_name = item.querySelector(
                                 mySelectors.FULL_NAME_SELECTOR
