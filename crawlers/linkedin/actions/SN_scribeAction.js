@@ -23,6 +23,7 @@ class SN_ScribeAction extends action.Action {
       company_name: '',
       company_linkedin_page: '',
       company_url: '',
+      about: '',
 
       // contact info
       websites: [],
@@ -54,6 +55,17 @@ class SN_ScribeAction extends action.Action {
       }, selector)
 
       log.debug("SN_ScribeAction: location added")
+    }
+
+    // about
+    selector_res = await utils.check_success_selector(selectors.SN_ABOUT_SELECTOR, this.page)
+    if(selector_res) {
+      selector = selectors.SN_ABOUT_SELECTOR
+      result.about = await this.page.evaluate((selector) => {
+        return document.querySelector(selector).innerText
+      }, selector)
+
+      log.debug("SN_ScribeAction: about added")
     }
 
     // education
