@@ -77,7 +77,8 @@ class SN_SearchAction extends action.Action {
 
           for (let item of items) {
             // don't add: noName LinkedIn members and 1st degree connections
-            if (item.querySelector(mySelectors.selector2) != null && !item.querySelector(mySelectors.selector3).innerText.toLowerCase().includes('linkedin') && (item.querySelector(mySelectors.selector4) == null || !item.querySelector(mySelectors.selector4).innerText.includes('1'))) {
+            // if (item.querySelector(mySelectors.selector2) != null && !item.querySelector(mySelectors.selector3).innerText.toLowerCase().includes('linkedin') && (item.querySelector(mySelectors.selector4) == null || !item.querySelector(mySelectors.selector4).innerText.includes('1'))) {
+            if (item.querySelector(mySelectors.selector2) != null && !item.querySelector(mySelectors.selector3).innerText.toLowerCase().includes('linkedin')) {
               let full_name = item.querySelector(mySelectors.selector3)
               let job_title = item.querySelector(mySelectors.selector5)
               let company_linkedin_page = item.querySelector(mySelectors.selector6)
