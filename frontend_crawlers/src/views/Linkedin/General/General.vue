@@ -64,18 +64,18 @@ export default {
     font-size: 32px;
     line-height: 65px;
     font-weight: bold;
-    color: #262a79;
+    color: #0373b2;
 }
 .text {
-    color: #262a79;
+    color: #0373b2;
     font-size: 20px;
 }
 .card_text {
-    color: #262a79;
+    color: #0373b2;
     font-size: 14px;
 }
 .card_title {
-    color: #262a79;
+    color: #0373b2;
     font-size: 20px;
     font-weight: bold;
 }

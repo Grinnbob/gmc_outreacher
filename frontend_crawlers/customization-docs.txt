@@ -26,6 +26,6 @@ rgba(244,245,249,.8)
 
 height: 80
 background-color: #FFF
-color: #262a79
+color: #0373b2
 font-size: 14px
 line-height: 50px

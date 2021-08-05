@@ -111,7 +111,11 @@
                             <p>
                                 <b>Finished at:</b>
                                 {{
-                                    actions_data && actions_data.finished_at
+                                    actions_data &&
+                                    actions_data.finished_at &&
+                                    actions_data.started_at &&
+                                    actions_data.finished_at >
+                                        actions_data.started_at
                                         ? new Date(actions_data.finished_at)
                                         : "-"
                                 }}
@@ -282,13 +286,14 @@ export default {
                         //     "danger",
                         //     "Something went wrong - empty result"
                         // )
-                        console.log("Something went wrong - status '-1'")``
+                        console.log("Something went wrong - status '-1'")
                     }
                     try {
                         this.last_result = JSON.parse(
                             r.data.result_data.data
                         ).arr
                     } catch (err) {
+                        this.last_result = null
                         console.log(
                             "can't parse result data for actions: ",
                             r.data
@@ -399,10 +404,10 @@ export default {
     font-size: 32px;
     line-height: 65px;
     font-weight: bold;
-    color: #262a79;
+    color: #0373b2;
 }
 .text {
-    color: #262a79;
+    color: #0373b2;
     font-size: 20px;
 }
 .card_title {

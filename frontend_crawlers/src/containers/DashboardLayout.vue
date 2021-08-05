@@ -54,7 +54,7 @@ export default {
 </script>
 <style>
 .text {
-    color: #262a79;
+    color: #0373b2;
     font-size: 20px;
 }
 </style>
