@@ -3,7 +3,7 @@
         <b-container>
             <b-row class="card-deck justify-content-md-center">
                 <b-col md="8">
-                    <p class="title">How to start</p>
+                    <p class="llama_title">How to start</p>
                 </b-col>
             </b-row>
         </b-container>
@@ -12,7 +12,7 @@
                 <b-col md="8">
                     <ol
                         style="margin-top:0;margin-bottom:0;padding-inline-start:48px;"
-                        class="text"
+                        class="llama_text"
                     >
                         <li
                             aria-level="1"
@@ -23,7 +23,7 @@
                                 dir="ltr"
                                 style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"
                             >
-                                <span class="text"
+                                <span class="llama_text"
                                     ><a href="/account/add">Add</a> your
                                     Linkedin account&nbsp;</span
                                 >
@@ -38,7 +38,7 @@
                                 dir="ltr"
                                 style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"
                             >
-                                <span class="text"
+                                <span class="llama_text"
                                     ><a href="/linkedin">Choose</a> actions type
                                     (basic Linkedin or Linkedin Sales
                                     Navigator)</span
@@ -54,7 +54,7 @@
                                 dir="ltr"
                                 style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"
                             >
-                                <span class="text"
+                                <span class="llama_text"
                                     >Type necessary information</span
                                 >
                             </p>
@@ -68,7 +68,7 @@
                                 dir="ltr"
                                 style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"
                             >
-                                <span class="text"
+                                <span class="llama_text"
                                     >Get profit on tab Result!</span
                                 >
                             </p>
@@ -79,14 +79,14 @@
         </b-container>
     </div>
 </template>
-<style>
-.title {
+<style scoped>
+.llama_title {
     font-size: 32px;
     line-height: 65px;
     font-weight: bold;
     color: #0373b2;
 }
-.text {
+.llama_text {
     color: #0373b2;
     font-size: 20px;
 }

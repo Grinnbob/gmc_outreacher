@@ -3,7 +3,7 @@
         <b-container class="mt-4">
             <b-row>
                 <b-col>
-                    <p class="text-center title">
+                    <p class="text-center llama_title">
                         Choose actions type
                     </p>
 
@@ -60,15 +60,11 @@ export default {
 }
 </script>
 <style>
-.title {
+.llama_title {
     font-size: 32px;
     line-height: 65px;
     font-weight: bold;
     color: #0373b2;
-}
-.text {
-    color: #0373b2;
-    font-size: 20px;
 }
 .card_text {
     color: #0373b2;

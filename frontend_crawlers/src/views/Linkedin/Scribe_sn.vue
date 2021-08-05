@@ -4,14 +4,14 @@
             <b-container>
                 <b-row>
                     <b-col cols="4" class="d-flex align-self-center">
-                        <p class="title">
+                        <p class="llama_title">
                             Scribe SN profile
                         </p>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
-                        <p class="text">
+                        <p class="llama_text">
                             Get Linkedin Sales Navigator profile info by link.
                         </p>
                     </b-col>
@@ -387,13 +387,13 @@ export default {
 }
 </script>
 <style>
-.title {
+.llama_title {
     font-size: 32px;
     line-height: 65px;
     font-weight: bold;
     color: #0373b2;
 }
-.text {
+.llama_text {
     color: #0373b2;
     font-size: 20px;
 }

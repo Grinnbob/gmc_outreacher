@@ -4,7 +4,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-4 d-flex align-self-center">
-                        <p class="title">
+                        <p class="llama_title">
                             Add account
                         </p>
                     </div>
@@ -31,7 +31,7 @@
             <div class="container" v-if="!loading">
                 <b-row class="my-1">
                     <b-col sm="8">
-                        <p class="text">
+                        <p class="llama_text">
                             Enter your linkedin li_at cookie. To get them -
                             download
                             <b-link
@@ -175,13 +175,13 @@ export default {
 }
 </script>
 <style>
-.title {
+.llama_title {
     font-size: 32px;
     line-height: 65px;
     font-weight: bold;
     color: #0373b2;
 }
-.text {
+.llama_text {
     color: #0373b2;
     font-size: 20px;
 }

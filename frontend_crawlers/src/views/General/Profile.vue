@@ -4,7 +4,7 @@
             <b-container>
                 <b-row>
                     <b-col md="4" class="d-flex align-self-center">
-                        <p class="title">Profile</p>
+                        <p class="llama_title">Profile</p>
                     </b-col>
                     <b-col
                         md="8"
@@ -72,13 +72,13 @@ export default {
 }
 </script>
 <style>
-.title {
+.llama_title {
     font-size: 32px;
     line-height: 65px;
     font-weight: bold;
     color: #0373b2;
 }
-.text {
+.llama_text {
     color: #0373b2;
     font-size: 20px;
 }
