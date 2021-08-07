@@ -70,15 +70,18 @@ async function check_success_selector(selector, page) {
     }
 
     try {
-        await page.waitForSelector(selector, { timeout: 5000 })
+        await page.waitForSelector(selector, { timeout: 1000 })
         return true
+
     } catch (err) {
+        log.error(`Selector ${selector} not available.`)
+        
         if (this.check_block(page.url())) {
             throw MyExceptions.ContextError("Block happend: " + page.url())
         }
-
-        return false
     }
+
+    return false
 }
 
 async function check_success_page(required_url, page) {

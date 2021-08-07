@@ -162,7 +162,7 @@ class Action {
 
         var pathname = new URL(url).pathname
 
-        log.debug("action.get_pathname:", pathname)
+        // log.debug("action.get_pathname:", pathname)
         return pathname
     }
 

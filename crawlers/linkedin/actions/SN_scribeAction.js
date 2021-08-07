@@ -65,6 +65,20 @@ class SN_ScribeAction extends action.Action {
         return document.querySelector(selector).innerText
       }, selector)
 
+      try {
+        // try to See more
+        await this.page.$eval(selectors.SN_ABOUT_SEE_MORE_SELECTOR, elem => elem.click()) // page.click not working
+        selector_res = await utils.check_success_selector(selectors.SN_ABOUT_INNER_SELECTOR, this.page)
+        if(selector_res) {
+          selector = selectors.SN_ABOUT_INNER_SELECTOR
+          result.about = await this.page.evaluate((selector) => {
+            return document.querySelector(selector).innerText
+          }, selector)
+        }
+      } catch (err) {
+        log.debug(`Can't see more for About in scribe action`)
+      }
+
       log.debug("SN_ScribeAction: about added")
     }
 

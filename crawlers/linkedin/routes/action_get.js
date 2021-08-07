@@ -50,7 +50,6 @@ const status_codes = require("../status_codes")
 router.post("/action", async (req, res) => {
     let result_data = {}
     let task = req.body
-    let action = {}
 
     try {
         let actions = []
@@ -61,10 +60,6 @@ router.post("/action", async (req, res) => {
             code: 0,
             if_true: true,
             data: actions[0],
-        }
-
-        for(let kek of actions) {
-            console.log(`started_at: ${kek.started_at}, date: ${new Date(kek.started_at)}`);
         }
     } catch (err) {
         log.error("Get action error:", err.stack)

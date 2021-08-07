@@ -67,8 +67,13 @@ class ScribeAction extends action.Action {
     // about
     selector_res = await utils.check_success_selector(selectors.ABOUT_SELECTOR, this.page)
     if(selector_res) {
+      try {
+        await this.page.$eval(selectors.ABOUT_SEE_MORE_SELECTOR, elem => elem.click()) // page.click not working
+      } catch (err) {
+        log.debug(`Can't see more for About in scribe action`)
+      }
       selector = selectors.ABOUT_SELECTOR
-      result.location = await this.page.evaluate((selector) => {
+      result.about = await this.page.evaluate((selector) => {
         if(document.querySelector(selector))
           return document.querySelector(selector).innerText
         else return ''
