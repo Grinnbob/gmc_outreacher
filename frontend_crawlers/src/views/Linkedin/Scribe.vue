@@ -12,7 +12,7 @@
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
                         <p class="llama_text">
-                            Get basic Linkedin profile info by link.
+                            Get basic LinkedIn profile info by link.
                         </p>
                     </b-col>
                 </b-row>
@@ -28,7 +28,7 @@
                                 Select account
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose your linkedIn account'
+                                        'Choose your LinkedIn account'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"

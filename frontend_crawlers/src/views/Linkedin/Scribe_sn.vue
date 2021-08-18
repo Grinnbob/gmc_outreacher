@@ -28,7 +28,7 @@
                                 Select account
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose your linkedIn account'
+                                        'Choose your LinkedIn account'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"

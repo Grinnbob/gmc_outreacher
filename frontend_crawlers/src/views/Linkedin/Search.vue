@@ -12,7 +12,7 @@
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
                         <p class="llama_text">
-                            Get profiles with info from basic Linkedin search.
+                            Get profiles with info from basic LinkedIn search.
                         </p>
                     </b-col>
                 </b-row>
@@ -28,7 +28,7 @@
                                 Select account
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose your linkedin account'
+                                        'Choose your LinkedIn account'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -48,7 +48,7 @@
                                 Search link
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Paste here link to Linkedin search'
+                                        'Paste the link to the LinkedIn search here'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
