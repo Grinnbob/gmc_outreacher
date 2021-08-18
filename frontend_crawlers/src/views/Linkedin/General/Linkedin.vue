@@ -3,8 +3,8 @@
         <b-container class="mt-4">
             <b-row>
                 <b-col>
-                    <p class="text-center title">
-                        Basic Linkedin actions
+                    <p class="text-center llama_title">
+                        Basic LinkedIn actions
                     </p>
 
                     <div class="card-deck justify-content-md-center">
@@ -25,7 +25,7 @@
                             </div>
                         </a> -->
 
-                        <a href="/linkedin/search/scribe">
+                        <a @click="$router.push('/linkedin/search/scribe')">
                             <div
                                 class="card mr-3 mb-3"
                                 style="width: 18rem; height: 11rem;"
@@ -36,13 +36,13 @@
                                     </p>
                                     <p class="card-text card_text">
                                         Get profiles with detailed info from
-                                        basic Linkedin search.
+                                        basic LinkedIn searches.
                                     </p>
                                 </div>
                             </div>
                         </a>
 
-                        <a href="/linkedin/scribe">
+                        <a @click="$router.push('/linkedin/scribe')">
                             <div
                                 class="card mr-3 mb-3"
                                 style="width: 18rem; height: 11rem;"
@@ -52,13 +52,13 @@
                                         One profile scribe
                                     </p>
                                     <p class="card-text card_text">
-                                        Get info from exec profile
+                                        Get info from exec profiles
                                     </p>
                                 </div>
                             </div>
                         </a>
 
-                        <a href="/linkedin/post">
+                        <a @click="$router.push('/linkedin/post')">
                             <div
                                 class="card mr-3 mb-3"
                                 style="width: 18rem; height: 11rem;"
@@ -68,10 +68,10 @@
                                         Post info scribe
                                     </p>
                                     <p class="card-text card_text">
-                                        Get info from post - likes, comments,
+                                        Get info from posts - likes, comments,
                                         etc.
                                     </p>
-                                    <p style="color: red;">coming soon</p>
+                                    <p style="color: red;">Coming soon</p>
                                 </div>
                             </div>
                         </a>
@@ -94,7 +94,7 @@ export default {
     created() {},
 }
 </script>
-<style>
+<style scoped>
 .llama_title {
     font-size: 32px;
     line-height: 65px;

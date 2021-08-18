@@ -4,7 +4,7 @@
             <b-row>
                 <b-col>
                     <p class="text-center llama_title">
-                        Linkedin Sales Navigator actions
+                        LinkedIn Sales Navigator actions
                     </p>
 
                     <div class="card-deck justify-content-md-center">
@@ -25,7 +25,7 @@
                             </div>
                         </a> -->
 
-                        <a href="/linkedin/sn/search/scribe">
+                        <a @click="$router.push('/linkedin/sn/search/scribe')">
                             <div
                                 class="card mr-3 mb-3"
                                 style="width: 18rem; height: 11rem;"
@@ -36,13 +36,13 @@
                                     </p>
                                     <p class="card-text card_text">
                                         Get profiles with detailed info from
-                                        Sales Navigator search.
+                                        Sales Navigator searches.
                                     </p>
                                 </div>
                             </div>
                         </a>
 
-                        <a href="/linkedin/sn/scribe">
+                        <a @click="$router.push('/linkedin/sn/scribe')">
                             <div
                                 class="card mr-3 mb-3"
                                 style="width: 18rem; height: 11rem;"
@@ -53,7 +53,7 @@
                                     </p>
                                     <p class="card-text card_text">
                                         Get info from exec Sales Navigator
-                                        profile
+                                        profiles
                                     </p>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@ export default {
     created() {},
 }
 </script>
-<style>
+<style scoped>
 .llama_title {
     font-size: 32px;
     line-height: 65px;

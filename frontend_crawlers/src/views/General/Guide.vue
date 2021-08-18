@@ -25,7 +25,7 @@
                             >
                                 <span class="llama_text"
                                     ><a href="/account/add">Add</a> your
-                                    Linkedin account&nbsp;</span
+                                    LinkedIn account&nbsp;</span
                                 >
                             </p>
                         </li>
@@ -39,8 +39,8 @@
                                 style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"
                             >
                                 <span class="llama_text"
-                                    ><a href="/linkedin">Choose</a> actions type
-                                    (basic Linkedin or Linkedin Sales
+                                    ><a href="/linkedin">Choose</a> the action
+                                    type (basic LinkedIn or LinkedIn Sales
                                     Navigator)</span
                                 >
                             </p>
@@ -55,7 +55,7 @@
                                 style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"
                             >
                                 <span class="llama_text"
-                                    >Type necessary information</span
+                                    >Type in the necessary information</span
                                 >
                             </p>
                         </li>
@@ -69,7 +69,7 @@
                                 style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;"
                             >
                                 <span class="llama_text"
-                                    >Get profit on tab Result!</span
+                                    >Get profits on the Results tab!</span
                                 >
                             </p>
                         </li>

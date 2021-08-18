@@ -32,26 +32,35 @@
                 <b-row class="my-1">
                     <b-col sm="8">
                         <p class="llama_text">
-                            Enter your linkedin li_at cookie. To get them -
-                            download
+                            Enter your linkedIn li_at cookie. To get them, -
+                            download the
                             <b-link
                                 href="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg/related?hl=en"
                                 target="_blank"
-                                >chrome extension</b-link
+                                >Chrome extension</b-link
                             >
                             for get cookies and go to your
                             <b-link
                                 href="https://www.linkedin.com"
                                 target="_blank"
-                                >linkedin page</b-link
+                                >LinkedIn page</b-link
                             >
-                            and extract exactly li_at value and paste here
+                            and extract the li_at value and paste it here
                         </p>
                     </b-col>
                 </b-row>
                 <b-row class="my-1">
                     <b-col sm="2">
-                        <label for="input-default">Login:</label>
+                        <label for="input-default"
+                            >Login:
+                            <b-icon
+                                v-b-popover.hover.top="
+                                    'You can add your real LinkedIn email here or any other random name for your account - we just need your li_at cookie for work.'
+                                "
+                                class="ml-2"
+                                icon="exclamation-circle"
+                            ></b-icon>
+                        </label>
                     </b-col>
                     <b-col sm="6">
                         <b-form-input

@@ -4,34 +4,34 @@
             <b-row>
                 <b-col>
                     <p class="text-center llama_title">
-                        Choose actions type
+                        Choose action type
                     </p>
 
                     <div class="card-deck justify-content-md-center">
-                        <a href="/navigate/linkedin">
+                        <a @click="$router.push('/navigate/linkedin')">
                             <div
                                 class="card mr-3 mb-3"
                                 style="width: 18rem; height: 11rem;"
                             >
                                 <div class="card-body text-center mx-4 my-4">
                                     <p class="card-text card_title">
-                                        Linkedin
+                                        LinkedIn
                                     </p>
                                     <p class="card-text card_text">
-                                        Actions with common Linkedin account
+                                        Actions with common LinkedIn account
                                     </p>
                                 </div>
                             </div>
                         </a>
 
-                        <a href="/navigate/linkedin/sn">
+                        <a @click="$router.push('/navigate/linkedin/sn')">
                             <div
                                 class="card mr-3 mb-3"
                                 style="width: 18rem; height: 11rem;"
                             >
                                 <div class="card-body text-center mx-4 my-4">
                                     <p class="card-text card_title">
-                                        Linkedin SN
+                                        LinkedIn SN
                                     </p>
                                     <p class="card-text card_text">
                                         Actions for accounts with paid Sales
@@ -59,7 +59,7 @@ export default {
     created() {},
 }
 </script>
-<style>
+<style scoped>
 .llama_title {
     font-size: 32px;
     line-height: 65px;

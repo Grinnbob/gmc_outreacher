@@ -68,7 +68,7 @@
                                 Pages
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose how many pages do you want to scribe'
+                                        'Choose how many pages you want to scribe'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"

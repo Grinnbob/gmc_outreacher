@@ -8,7 +8,7 @@
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
             <b-navbar-nav>
-                <b-nav-item href="/linkedin" class="text">Linkedin</b-nav-item>
+                <b-nav-item href="/linkedin" class="text">LinkedIn</b-nav-item>
                 <b-nav-item
                     href="https://linkedin.devlabsco.com/api-docs/"
                     target="blank"

@@ -12,7 +12,7 @@
                 <b-row>
                     <b-col cols="6" class="d-flex align-self-center">
                         <p class="llama_text">
-                            Get Linkedin Sales Navigator profile info by link.
+                            Get LinkedIn Sales Navigator profile info by link.
                         </p>
                     </b-col>
                 </b-row>
@@ -28,7 +28,7 @@
                                 Select account
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose your linkedin account'
+                                        'Choose your linkedIn account'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -48,7 +48,7 @@
                                 Profile link
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Paste here link to Linkedin Sales Navigator profile'
+                                        'Paste the link to the LinkedIn Sales Navigator profile here'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"

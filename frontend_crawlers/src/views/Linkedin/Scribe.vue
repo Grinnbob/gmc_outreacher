@@ -28,7 +28,7 @@
                                 Select account
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose your linkedin account'
+                                        'Choose your linkedIn account'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -48,7 +48,7 @@
                                 Profile link
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Paste here link to Linkedin profile'
+                                        'Paste the link to the LinkedIn profile here'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"

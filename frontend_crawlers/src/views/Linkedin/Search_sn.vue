@@ -28,7 +28,7 @@
                                 Select account
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose your linkedin account. (It must have active Sales Navigator option)'
+                                        'Choose your LinkedIn account. (It must have an active Sales Navigator option)'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -48,7 +48,7 @@
                                 Search link
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Paste here link to Linkedin Sales Navigator search'
+                                        'Paste the link to the LinkedIn Sales Navigator search here'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
@@ -68,7 +68,7 @@
                                 Pages
                                 <b-icon
                                     v-b-popover.hover.top="
-                                        'Choose how many pages do you want to scribe'
+                                        'Choose how many pages you want to scribe'
                                     "
                                     class="ml-2"
                                     icon="exclamation-circle"
